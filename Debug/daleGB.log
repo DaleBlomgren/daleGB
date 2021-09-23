@@ -1,1 +1,5 @@
-﻿LINK : fatal error LNK1104: cannot open file 'glfw3.lib'
+﻿main.obj : error LNK2019: unresolved external symbol __imp__glfwInit referenced in function _main
+main.obj : error LNK2019: unresolved external symbol __imp__glfwTerminate referenced in function _main
+C:\Users\dale_blomgren\source\repos\daleGB\bin\glfw3.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'x86'
+C:\Users\dale_blomgren\source\repos\daleGB\bin\glfw3dll.lib : warning LNK4272: library machine type 'x64' conflicts with target machine type 'x86'
+C:\Users\dale_blomgren\source\repos\daleGB\Debug\daleGB.exe : fatal error LNK1120: 2 unresolved externals
