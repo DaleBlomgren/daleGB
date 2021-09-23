@@ -16,12 +16,21 @@
 
 int main(int argc, char* argv[]) {
 
+	GLFWwindow* window;
+
 	if (!glfwInit()) {
 		std::string noted;
 		printf("glfw initiation failure\n Press Enter to Exit: \n");
 		std::cin >> noted;
-		glfwTerminate();
+
 		exit(1);
+	}
+	//GB resolution is 160(w) x 144(h)
+	window = glfwCreateWindow(160, 144, "daleGB pre-Alpha", NULL, NULL);
+	if (!window)
+	{
+		glfwTerminate();
+		exit(2);
 	}
 
 	glfwTerminate();
