@@ -1,2 +1,1 @@
-﻿  main.cpp
-  daleGB.vcxproj -> C:\Users\dale_blomgren\source\repos\daleGB\Debug\daleGB.exe
+﻿LINK : fatal error LNK1104: cannot open file 'glfw3.lib'
