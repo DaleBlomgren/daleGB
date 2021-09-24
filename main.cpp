@@ -26,6 +26,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
 
+
 int main(int argc, char* argv[]) {
 
 	GLFWwindow* window;
@@ -40,7 +41,7 @@ int main(int argc, char* argv[]) {
 		exit(EXIT_FAILURE);
 	}
 	//GB resolution is 160(w) x 144(h)
-	window = glfwCreateWindow(160, 144, "daleGB pre-Alpha", NULL, NULL);
+	window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "daleGB pre-Alpha", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -52,7 +53,11 @@ int main(int argc, char* argv[]) {
 
 	//Primary loop
 	while (!glfwWindowShouldClose(window)) {
-
+		
+		
+		
+		glfwSwapBuffers(window);
+		glfwPollEvents();
 	}
 
 	glfwDestroyWindow(window);
