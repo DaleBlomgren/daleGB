@@ -50,11 +50,12 @@ int main(int argc, char* argv[]) {
 
 	glfwMakeContextCurrent(window);
 
+	//Check for extensions and initialize them here
 
 	//Primary loop
 	while (!glfwWindowShouldClose(window)) {
 		
-		
+		//emulate frames
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();

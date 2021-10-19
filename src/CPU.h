@@ -14,4 +14,24 @@
 //																		 //
 ///////////////////////////////////////////////////////////////////////////
 
-#pragma once
+#include <stdint.h>
+
+class SharpCPU {
+	public:
+		SharpCPU();
+		~SharpCPU();
+
+		bool loadApplication(const char* filename);
+		void emulateCycle();
+
+
+	private:
+
+		unsigned short pc;
+		unsigned short opcode;
+
+		uint8_t workRam[8192]; //(size == 8K)
+		uint8_t videoRam[8192]; 
+
+		int init();
+};
