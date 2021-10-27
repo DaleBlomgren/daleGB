@@ -33,10 +33,12 @@ SharpCPU::~SharpCPU() {
 }
 
 int SharpCPU::init() {
-	//set starting program counter address
-	//set beginning opcode
+	//set starting program counter address (which is $100)
+	//set position for starting opcode
 	//set beginning index register
 	//set current stack pointer
+	//Write scrolling nintendo text into memory address
+
 }
 
 bool SharpCPU::loadApplication(const char* filename) {
@@ -46,3 +48,4 @@ bool SharpCPU::loadApplication(const char* filename) {
 void SharpCPU::emulateCycle() {
 
 }
+
