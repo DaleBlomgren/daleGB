@@ -18,12 +18,18 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\CPU.cpp">
+    <ClCompile Include="src\SharpSM83.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\CPU.h">
+    <ClInclude Include="src\SharpSM83.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\boot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\definitions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

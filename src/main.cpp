@@ -16,6 +16,7 @@
 #define SCREEN_WIDTH 160
 #define SCREEN_HEIGHT 144
 
+typedef unsigned __int8 u8;
 
 static void error_callback(int error, const char* description) {
 	fprintf(stderr, "Error: %s\n", description); 

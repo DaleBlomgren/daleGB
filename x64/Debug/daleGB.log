@@ -1,2 +1,5 @@
-﻿  main.cpp
-  daleGB.vcxproj -> C:\Users\dale_blomgren\source\repos\daleGB\x64\Debug\daleGB.exe
+﻿  SharpSM83.cpp
+  main.cpp
+  Generating Code...
+C:\Users\dale_blomgren\source\repos\daleGB\src\SharpSM83.cpp(46): error C4716: 'SharpSM83::initialRead': must return a value
+C:\Users\dale_blomgren\source\repos\daleGB\src\SharpSM83.cpp(42): error C4716: 'SharpSM83::init': must return a value
