@@ -145,13 +145,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\SharpSM83.cpp" />
+    <ClCompile Include="src\CPU.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\MemoryBank.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\boot.h" />
     <ClInclude Include="src\definitions.h" />
-    <ClInclude Include="src\SharpSM83.h" />
+    <ClInclude Include="src\CPU.h" />
+    <ClInclude Include="src\MemoryBank.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
