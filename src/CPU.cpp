@@ -25,7 +25,15 @@
 #include "CPU.h"
 
 CPU::CPU(){
+	pc = 0x100;
+	opcode = 0;
+	I = 0;
+	sp = 0;
 
+	for (int i = 0; i < 65535; i++)
+		memory[i] = 0;
+	for (int i = 0; i < 8; i++)
+		V[i] = 0;
 }
 
 CPU::~CPU() {
