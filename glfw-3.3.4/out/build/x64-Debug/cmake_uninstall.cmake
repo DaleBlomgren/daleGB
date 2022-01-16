@@ -1,9 +1,9 @@
 
-if (NOT EXISTS "C:/Users/DaleB/source/repos/daleGB/glfw-3.3.4/out/build/x64-Debug/install_manifest.txt")
-  message(FATAL_ERROR "Cannot find install manifest: \"C:/Users/DaleB/source/repos/daleGB/glfw-3.3.4/out/build/x64-Debug/install_manifest.txt\"")
+if (NOT EXISTS "C:/Users/User/source/repos/daleGB/glfw-3.3.4/out/build/x64-Debug/install_manifest.txt")
+  message(FATAL_ERROR "Cannot find install manifest: \"C:/Users/User/source/repos/daleGB/glfw-3.3.4/out/build/x64-Debug/install_manifest.txt\"")
 endif()
 
-file(READ "C:/Users/DaleB/source/repos/daleGB/glfw-3.3.4/out/build/x64-Debug/install_manifest.txt" files)
+file(READ "C:/Users/User/source/repos/daleGB/glfw-3.3.4/out/build/x64-Debug/install_manifest.txt" files)
 string(REGEX REPLACE "\n" ";" files "${files}")
 
 foreach (file ${files})

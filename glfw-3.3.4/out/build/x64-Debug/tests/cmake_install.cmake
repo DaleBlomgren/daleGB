@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/DaleB/source/repos/daleGB/glfw-3.3.4/tests
+# Install script for directory: C:/Users/User/source/repos/daleGB/glfw-3.3.4/tests
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Users/DaleB/Source/Repos/daleGB/glfw-3.3.4/out/install/x64-Debug")
+  set(CMAKE_INSTALL_PREFIX "C:/Users/User/source/repos/daleGB/glfw-3.3.4/out/install/x64-Debug")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 

@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/DaleB/source/repos/daleGB/glfw-3.3.4/src
+# Install script for directory: C:/Users/User/source/repos/daleGB/glfw-3.3.4/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Users/DaleB/Source/Repos/daleGB/glfw-3.3.4/out/install/x64-Debug")
+  set(CMAKE_INSTALL_PREFIX "C:/Users/User/source/repos/daleGB/glfw-3.3.4/out/install/x64-Debug")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -33,6 +33,6 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/DaleB/source/repos/daleGB/glfw-3.3.4/out/build/x64-Debug/src/glfw3.lib")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/User/source/repos/daleGB/glfw-3.3.4/out/build/x64-Debug/src/glfw3.lib")
 endif()
 
