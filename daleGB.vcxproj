@@ -119,8 +119,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\User\source\repos\daleGB\glfw-3.3.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\Users\dale_blomgren\source\repos\daleGB\glfw-3.3.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -148,7 +147,6 @@
   <ItemGroup>
     <ClCompile Include="src\CPU.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\opcodes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\boot.h" />

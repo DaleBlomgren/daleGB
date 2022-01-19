@@ -23,7 +23,6 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "CPU.h"
-#include <unordered_map>
 
 CPU::CPU(){
 	pc = 0x100;
@@ -51,7 +50,6 @@ int CPU::init() {
 }
 
 bool CPU::initialRead(const char* filename) {
-	//add all opcode conversions into a private map
 
 }
 
@@ -59,14 +57,3 @@ void CPU::emulateCycle() {
 
 }
 
-void CPU::opcodeDecode() {
-
-
-}
-
-void CPU::opcodeExecute() {
-
-}
-
-/*						Things to implement after Alpha					*/
-/*						Echo Ram										*/				

@@ -17,7 +17,6 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include <stdint.h>
-#include <unordered_map>
 
 class CPU {
 	public:
@@ -26,8 +25,6 @@ class CPU {
 
 		
 		void emulateCycle();
-		void opcodeDecode();
-		void opcodeExecute();
 
 
 	private:
