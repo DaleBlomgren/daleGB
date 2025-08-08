@@ -198,27 +198,100 @@ int SM83::executeOpcode(){
             PC += 1;
             return 8; 
         }
+
         else if (endblock == 0x02){
-            
+            // 0x0A - LD A,[BC] | 1 8 | - - - -
+            A = Memory::readByte(getBC()); 
+            PC += 1;
+            return 8;           
         }
+
         else if (endblock == 0x03){
-            
+            // 0x0B - DEC BC | 1 8 | - - - -
+            uint16_t bc = getBC();
+            bc--;
+            B = (bc >> 8) & 0xFF;
+            C = bc & 0xFF;
+            PC += 1;
+            return 8;
         }
+
         else if (endblock == 0x04){
-            
+            // 0x0C - INC C | 1 4 | Z 0 H -
+            C++;
+            flags.Z = (C == 0); 
+            flags.N = false; 
+            flags.H = (C & 0x0F) == 0; 
+            PC += 1;
+            return 4;
         }
+
         else if (endblock == 0x05){
-            
+            // 0x0D - DEC C | 1 4 | Z 1 H -
+            C--;
+            flags.Z = (C == 0);
+            flags.N = true;
+            flags.H = (C & 0x0F) == 0x0F;
+            PC += 1;
+            return 4;
         }
+
         else if (endblock == 0x06){
-            
+            // 0x0E - LD C,n8 | 2 8 | - - - -
+            C = Memory::readByte(PC + 1); 
+            PC += 2;
+            return 8;
         }
+
         else if (endblock == 0x07){
-            
+            // 0x0F - RRCA | 1 4 | 0 0 0 C
+            uint8_t carry = A & 0x01; // Check if the lowest bit is set
+            A = (A >> 1) | (carry << 7); // Rotate right
+            flags.Z = (A == 0); 
+            flags.N = false; 
+            flags.H = false; 
+            flags.C = (carry != 0); // Set C flag if the lowest bit was set
+            PC += 1; 
+            return 4;     
         }
     }
-    else if (subblock == 0x10){
 
+    else if (subblock == 0x10){ // 0xXX010XXX block
+        if (endblock == 0x00){ // implementation of the STOP instruction is a bit complex
+            // 0x10 - STOP n8 | 2 4 | - - - -
+            // https://gist.github.com/SonoSooS/c0055300670d678b5ae8433e20bea595#nop-and-stop
+            // This is a special case, the CPU will stop executing instructions
+            // until a reset or an interrupt occurs.
+            uint8_t n8 = Memory::readByte(PC + 1); 
+        }
+
+        else if (endblock == 0x01){
+
+        }
+
+        else if (endblock == 0x02){
+
+        }
+
+        else if (endblock == 0x03){
+
+        }
+
+        else if (endblock == 0x04){
+
+        }
+
+        else if (endblock == 0x05){
+
+        }
+
+        else if (endblock == 0x06){
+
+        }
+
+        else if (endblock == 0x07){
+
+        }
     }
     else if (subblock == 0x18){
 
