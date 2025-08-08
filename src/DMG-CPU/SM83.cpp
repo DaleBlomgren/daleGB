@@ -263,14 +263,31 @@ int SM83::executeOpcode(){
             // This is a special case, the CPU will stop executing instructions
             // until a reset or an interrupt occurs.
             uint8_t n8 = Memory::readByte(PC + 1); 
+            if (n8 == 0x00) {
+                // Stop the CPU
+                // This is a no-operation instruction that stops the CPU until an interrupt occurs.
+                // In a real implementation, you would set a flag to indicate that the CPU is stopped.
+                PC += 2; // Increment PC by 2 to skip the next byte
+                return 4; // Return 4 T-states for STOP
+            } else {
+                printf("Invalid STOP instruction with parameter: 0x%02X at PC: 0x%04X\n", n8, PC);
+                return -1; // Invalid STOP instruction
+            }
         }
 
         else if (endblock == 0x01){
-
+            // 0x11 - LD DE,n16 | 3 12 | - - - -
+            E = Memory::readByte(PC + 1);
+            D = Memory::readByte(PC + 2); 
+            PC += 3;
+            return 12;
         }
 
         else if (endblock == 0x02){
-
+            // 0x12 - LD [DE],A | 1 8 | - - - -
+            Memory::writeByte(getDE(), A); 
+            PC += 1;
+            return 8;
         }
 
         else if (endblock == 0x03){
