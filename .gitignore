@@ -36,3 +36,6 @@ src/ROMS/
 .idea/
 *.swp
 *~
+
+# File System files
+.DS_Store
