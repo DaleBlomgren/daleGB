@@ -1,0 +1,10 @@
+    : This may not be important, but there is a BOOTROM Sequence from 0x0000 to 0x0100 that checks authenticity of game carts.
+      https://github.com/ISSOtm/gb-bootroms/ to find disassemblies, pass for now
+
+    : Emu Boot | https://gbdev.io/pandocs/The_Cartridge_Header.html
+    
+    : Then start programming from terms of the boot sequence, focus on only one memory bank games for now,
+      Then when its time to start executing opcodes, start writing those.
+      Create functions to read memory addresses in memory function.
+
+    : Dude the ROMs class is fuuuuuucked, this needs to be worked on asap.

@@ -1,0 +1,5 @@
+/*
+    Do operation
+    Increment Program Counter appropriately
+    Set flags
+*/
