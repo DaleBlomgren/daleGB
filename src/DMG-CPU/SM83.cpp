@@ -291,27 +291,114 @@ int SM83::executeOpcode(){
         }
 
         else if (endblock == 0x03){
-
+            // 0x13 - INC DE | 1 8 | - - - -
+            uint16_t de = getDE();
+            de++;
+            D = (de >> 8) & 0xFF; 
+            E = de & 0xFF;
+            PC += 1;
+            return 8;
         }
 
         else if (endblock == 0x04){
-
+            // 0x14 - INC D | 1 4 | Z 0 H -
+            D++;
+            lags.Z = (D == 0); 
+            flags.N = false; 
+            flags.H = (D & 0x0F) == 0; // Set H flag if lower nibble is 0
+            PC += 1;
+            return 4; 
         }
 
         else if (endblock == 0x05){
-
+            // 0x15 - DEC D | 1 4 | Z 1 H -
+            D--;
+            flags.Z = (D == 0); 
+            flags.N = true; 
+            flags.H = (D & 0x0F) == 0x0F; // Set H flag if lower nibble is 0x0F
+            PC += 1;
+            return 4; 
         }
 
         else if (endblock == 0x06){
-
+            // 0x16 - LD D,n8 | 2 8 | - - - -
+            D = Memory::readByte(PC + 1);
+            PC += 2;
+            return 8;
         }
 
         else if (endblock == 0x07){
-
+            // 0x17 - RLA | 1 4 | 0 0 0 C
+            uint8_t carry = flags.C ? 0x01 : 0x00; // Get the current C flag || May be wasteful, could use bool
+            A = (A << 1) | carry; // Rotate left with carry
+            flags.Z = 0;
+            flags.N = false;
+            flags.H = false;
+            flags.C = (A & 0x80) != 0; // Set C flag if the highest bit was set
+            PC += 1;
+            return 4;
         }
     }
-    else if (subblock == 0x18){
+    else if (subblock == 0x18){ // 0xXX011XXX block
+        if (endblock == 0x00){
+            // 0x18 - JR e8 | 2 12 | - - - -
+            int8_t offset = Memory::readByte(PC + 1); // Read signed byte
+            PC += 2; // Increment PC by 2 to skip the offset byte
+            PC += offset; // Add the signed offset to PC
+            return 12; 
+        }
 
+        else if (endblock == 0x01) {
+            // 0x19 - ADD HL,DE | 1 8 | - 0 H C
+            uint16_t result, carry_per_bit = getHL() + getDE();
+            flags.N = false; // N flag is always 0 for ADD
+            flags.H = ((getHL() & 0x0FFF) + (getDE() & 0x0FFF)) > 0x0FFF; // Set H flag if there was a half carry
+            flags.C = (carry_per_bit > 0xFFFF); // Set C flag if there was a carry
+            result = getHL() + getDE();
+            H = (result >> 8) & 0xFF; // Set high byte
+            L = result & 0xFF; // Set low byte
+            PC += 1; 
+            return 8; 
+        }
+
+        else if (endblock == 0x02) {
+            // 0x1A - LD A,[DE] | 1 8 | - - - -
+            A = Memory::readByte(getDE());
+            PC += 1;
+            return 8;
+        }
+
+        else if (endblock == 0x03) {
+            // 0x1B - DEC DE | 1 8 | - - - -
+            uint16_t de = getDE();
+            de--;
+            D = (de >> 8) & 0xFF;
+            E = de & 0xFF;
+            PC += 1;
+            return 8;
+        }
+
+        else if (endblock == 0x04) {
+            // 0x1C - INC E | 1 4 | Z 0 H -
+            E++;
+            flags.Z = (E == 0);
+            flags.N = false;
+            flags.H = (E & 0x0F) == 0; 
+            PC += 1;
+            return 4;
+        }
+
+        else if (endblock == 0x05) {
+            
+        }
+
+        else if (endblock == 0x06) {
+            
+        }
+
+        else if (endblock == 0x07) {
+            
+        }
     }
     else if (subblock == 0x20){
 
