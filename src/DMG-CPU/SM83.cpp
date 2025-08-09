@@ -389,19 +389,109 @@ int SM83::executeOpcode(){
         }
 
         else if (endblock == 0x05) {
-            
+            // 0x1D - DEC E | 1 4 | Z 1 H -
+            E--;
+            flags.Z = (E == 0);
+            flags.N = true;
+            flags.H = (E & 0x0F) == 0x0F;
+            PC += 1;
+            return 4;
         }
 
         else if (endblock == 0x06) {
-            
+            // 0x1E - LD E,n8 | 2 8 | - - - -
+            E = Memory::readByte(PC + 1); 
+            PC += 2;
+            return 8;
         }
 
         else if (endblock == 0x07) {
-            
+            // 0x1F - RRA | 1 4 | 0 0 0 C
+            uint8_t carry = flags.C ? 0x80 : 0x00; // Get the current C flag | May be wasteful, could use bool
+            A = (A >> 1) | carry; // Rotate right with carry
+            flags.Z = 0;
+            flags.N = false;
+            flags.H = false;
+            flags.C = (A & 0x01) != 0; 
+            PC += 1;
+            return 4;
         }
     }
-    else if (subblock == 0x20){
+    else if (subblock == 0x20){ // 0xXX100XXX block
+        if (endblock == 0x00){
+            // 0x20 - JR NZ, e8 | 2 12 | - - - -
+            if (flags.Z == false) {
+                int8_t offset = Memory::readByte(PC + 1); // Read signed byte
+                PC += 2; // Increment PC by 2 to skip the offset byte
+                PC += offset; // Add the signed offset to PC
+                return 12; 
+            } else {
+                PC += 2; // Skip the offset if Z flag is set
+                return 8; // Return 8 T-states for JR NZ
+            }
+        }
 
+        else if (endblock == 0x01){
+            // 0x21 - LD HL, n16 | 3 12 | - - - -
+            L = Memory::readByte(PC + 1); 
+            H = Memory::readByte(PC + 2); 
+            PC += 3; 
+            return 12; 
+        }
+
+        else if (endblock == 0x02){
+            // 0x22 - LD [HL+], A | 1 8 | - - - -
+            Memory::writeByte(getHL(), A); // !! May be wrong,we want to load data from A register to 16-bit absolute address specified by HL
+            uint16_t hl = getHL();
+            hl++;
+            H = (hl >> 8) & 0xFF;
+            L = hl & 0xFF; // Increment HL after writing
+            PC += 1;
+            return 8;   
+        }
+
+        else if (endblock == 0x03){
+            // 0x23 - INC HL | 1 8 | - - - -
+            uint16_t hl = getHL();
+            hl++;
+            H = (hl >> 8) & 0xFF; 
+            L = hl & 0xFF;
+            PC += 1;
+            return 8;
+        }
+
+        else if (endblock == 0x04){
+            // 0x24 - INC H | 1 4 | Z 0 H -
+            H++;
+            flags.Z = (H == 0); 
+            flags.N = false; 
+            flags.H = (H & 0x0F) == 0; 
+            PC += 1;
+            return 4;
+        }
+
+        else if (endblock == 0x05){
+            // 0x25 - DEC H | 1 4 | Z 1 H -
+            H--;
+            flags.Z = (H == 0); 
+            flags.N = true; 
+            flags.H = (H & 0x0F) == 0x0F; 
+            PC += 1;
+            return 4;
+        }
+
+        else if (endblock == 0x06){
+            // 0x26 - LD H, n8 | 2 8 | - - - -
+            H = Memory::readByte(PC + 1); 
+            PC += 2;
+            return 8;
+        }
+
+        else if (endblock == 0x07){ // !! kinda complicated, but helpful resource here: https://blog.ollien.com/posts/gb-daa/
+            // 0x27 - DAA | 1 4 | Z 0 H C
+
+            
+        }
     }
     else if (subblock == 0x28){
 
