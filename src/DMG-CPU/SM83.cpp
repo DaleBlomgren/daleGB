@@ -489,11 +489,90 @@ int SM83::executeOpcode(){
 
         else if (endblock == 0x07){ // !! kinda complicated, but helpful resource here: https://blog.ollien.com/posts/gb-daa/
             // 0x27 - DAA | 1 4 | Z 0 H C
+            bool should_carry = false;
+            if(flags.N == true) { //check to see if subtract flag N is set
+                uint8_t adjust = 0x00;
+                if (flags.C == true || A > 0x99) { 
+                    adjust |= 0x60; // Set C flag and adjust for carry 
+                }
+                if (flags.H == true || (A & 0x0F) > 0x09) { 
+                    adjust |= 0x06; // Set H flag and adjust for half carry
+                }
+                A -= adjust; // Subtract the adjustment value
+                flags.Z = (A == 0); // Set Z flag if A is zero
+                flags.H = false; // Clear H flag
+                flags.C = (A > 0x99); // Set C flag if A is greater than 0x99
+                pc += 1; // Increment PC
+                return 4; // Return 4 T-states for DAA
+            }
+            else{ //subtract flag n not set
+                uint8_t adjust = 0x00;
+                if (flags.C == true || A > 0x99) { 
+                    adjust |= 0x60; // Set C flag and adjust for carry
+                }
+                if (flags.H == true || (A & 0x0F) > 0x09) { 
+                    adjust |= 0x06; // Set H flag and adjust for half carry 
+                }
+                A += adjust; // Add the adjustment value
+                flags.Z = (A == 0); // Set Z flag if A is zero
+                flags.H = false; // Clear H flag
+                flags.C = (A > 0x99); // Set C flag if A is greater than 0x99
+                PC += 1; // Increment PC
+                return 4; // Return 4 T-states for DAA
+            }
 
-            
         }
     }
     else if (subblock == 0x28){
+        if (endblock == 0x00){ 
+            // 0x28 - JR Z, e8 | 2 12/8 | ---- 
+            if (flag.Z == true) { 
+                int8_t offset = Memory::readByte(PC + 1); // Read signed byte
+                PC += 2; // Increment PC by 2 to skip the offset byte
+                PC += offset; // Add the signed offset to PC
+                return 12; // Return 12 T-states for JR Z
+            } else {
+                PC += 2; // Skip the offset if Z flag is not set
+                return 8; 
+            }
+        }
+        else if (endblock == 0x01){
+            // 0x29 - ADD HL,HL | 1 8 | - 0 H C
+            uint16_t result, carry_per_bit = getHL() + getHL(); // if problem here, maybe make uint32_t
+            flags.C = (carry_per_bit > 0xFFFF); // Set C flag if there was a carry
+            flags.N = false; // N flag is always 0 for ADD
+            flags.H = ((getHL() & 0x0FFF) + (getHL() & 0x0FFF)) > 0x0FFF; // Set H flag if there was a half carry
+            result = getHL() + getHL();
+            H = (result >> 8) & 0xFF; // Set high byte
+            L = result & 0xFF; // Set low byte
+            PC += 1;
+            return 8;            
+        }
+        else if (endblock == 0x02){
+            // 0x2A - LD A,[HL+] | 1 8 | - - - -
+            A = Memory::readByte(getHL()); // Load data from memory at address HL into A
+            uint16_t hl = getHL();
+            hl++;
+            H = (hl >> 8) & 0xFF; // Increment HL after reading
+            L = hl & 0xFF; // Increment HL after reading
+            PC += 1;
+            return 8;
+        }
+        else if (endblock == 0x03){
+            
+        }
+        else if (endblock == 0x04){
+            
+        }
+        else if (endblock == 0x05){
+            
+        }
+        else if (endblock == 0x06){
+            
+        }
+        else if (endblock == 0x07){
+
+        }
 
     }
     else if (subblock == 0x30){
