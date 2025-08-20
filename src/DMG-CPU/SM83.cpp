@@ -559,6 +559,415 @@ int SM83::executeOpcode(){
             return 8;
         }
         else if (endblock == 0x03){
+            // 0x2B - DEC HL | 1 8 | - - - -
+            uint16_t hl = getHL();
+            hl--;
+            H = (hl >> 8) & 0xFF; // Decrement HL
+            L = hl & 0xFF; // Decrement HL
+            PC += 1;
+            return 8;
+        }
+        else if (endblock == 0x04){
+            // 0x2C - INC L | 1 4 | Z 0 H -
+            L++;
+            flags.Z = (L == 0); 
+            flags.N = false; 
+            flags.H = (L & 0x0F) == 0; // Set H flag if lower nibble is 0
+            PC += 1;
+            return 4; 
+        }
+        else if (endblock == 0x05){
+            // 0x2D - DEC L | 1 4 | Z 1 H -
+            L--;
+            flags.Z = (L == 0); 
+            flags.N = true; 
+            flags.H = (L & 0x0F) == 0x0F; // Set H flag if lower nibble is 0x0F
+            PC += 1;
+            return 4; 
+        }
+        else if (endblock == 0x06){
+            // 0x2E - LD L,n8 | 2 8 | - - - -
+            L = Memory::readByte(PC + 1); // Load immediate value into L
+            PC += 2;
+            return 8; 
+        }
+        else if (endblock == 0x07){
+            // 0x2F - CPL | 1 4 | - 1 1 - AKA bitwise NOT
+            A = ~A; 
+            flags.N = true; 
+            flags.H = true; 
+            PC += 1;
+            return 4;      
+        } 
+    }
+    else if (subblock == 0x30){
+        if (endblock == 0x00){
+            //0x30 - JR NC, e8 | 2 12/8 | - - - -
+            if (flags.C == false) { // Check if C flag is not set
+                int8_t offset = Memory::readByte(PC + 1); 
+                PC += 2; 
+                PC += offset; 
+                return 12; 
+            }
+            else {
+                PC += 2; 
+                return 8; 
+            }
+        }
+        else if (endblock == 0x01){
+            // 0x31 - LD SP, n16 | 3 12 | - - - -
+            uint16_t nn = Memory::readByte(PC + 1) | (Memory::readByte(PC + 2) << 8); // Read n16
+            SP = nn; 
+            PC += 3; 
+            return 12;
+        }
+        else if (endblock == 0x02){
+            // 0x32 [HL-], A | 1 8 | - - - -
+            Memory::writeByte(getHL(), A); // Write A to memory at address HL
+            uint16_t hl = getHL();
+            hl--; 
+            H = (hl >> 8) & 0xFF; 
+            L = hl & 0xFF; 
+            PC += 1; 
+            return 8;
+        }
+        else if (endblock == 0x03){
+            // 0x33 - INC SP | 1 8 | - - - -
+            SP++; // Increment Stack Pointer
+            PC += 1; 
+            return 8; 
+        }
+        else if (endblock == 0x04){
+            // 0x34 - INC [HL] | 1 12 | Z 0 H -
+            uint16_t hl = getHL();
+            uint8_t value = Memory::readByte(hl); // Read value at address HL
+            value++; // Increment value
+            flags.Z = (value == 0); 
+            flags.N = false; 
+            flags.H = (value & 0x0F) == 0;
+            Memory::writeByte(hl, value); 
+            PC += 1;
+            return 12; 
+        }
+        else if (endblock == 0x05){
+            // 0x35 - DEC [HL] | 1 12 | Z 1 H -
+            uint16_t hl = getHL();
+            uint8_t value = Memory::readByte(hl); 
+            value--; 
+            flags.Z = (value == 0);
+            flags.N = true;
+            flags.H = (value & 0x0F) == 0x0F;
+            Memory::writeByte(hl, value); 
+            PC += 1;
+            return 12;
+        }
+        else if (endblock == 0x06){
+            // 0x36 - LD [HL], n8 | 2 12 | - - - -
+            uint16_t hl = getHL();
+            uint8_t n8 = Memory::readByte(PC + 1);
+            Memory::writeByte(hl, n8); 
+            PC += 2; 
+            return 12;
+        }
+        else if (endblock == 0x07){
+            // 0x37 - SCF | 1 4 | - 0 0 1 "Set Carry Flag"
+            flags.C = true; // Set Carry flag
+            flags.N = false; // Clear Subtract flag
+            flags.H = false; // Clear Half Carry flag
+            PC += 1;
+            return 4;
+        }
+    }
+    else if (subblock == 0x38){
+        if (endblock == 0x00){
+            // 0x38 JR C,e8 | 2 12/8 | - - - -
+            if (flags.C == true) {
+                int8_t offset = Memory::readByte(PC + 1); 
+                PC += 2; 
+                PC += offset; 
+                return 12;
+            }
+            else {
+                PC += 2;
+                return 8;
+            }
+        }
+        else if (endblock == 0x01){
+            // 0x39 - ADD HL,SP | 1 8 | - 0 H C
+            uint16_t result, carry_per_bit = getHL() + SP; 
+            flags.C = (carry_per_bit > 0xFFFF); // Set C flag if there was a carry, if problem here, maybe make uint32_t
+            flags.N = false;
+            flags.H = ((getHL() & 0x0FFF) + (SP & 0x0FFF)) > 0x0FFF; 
+            result = getHL() + SP;
+            H = (result >> 8) & 0xFF; 
+            L = result & 0xFF; 
+            PC += 1;
+            return 8;
+        }
+        else if (endblock == 0x02){
+            // 0x3A - LD A,[HL-] | 1 8 | - - - -
+            A = Memory::readByte(getHL());
+            uint16_t hl = getHL();
+            hl--; 
+            H = (hl >> 8) & 0xFF; 
+            L = hl & 0xFF; 
+            PC += 1;
+            return 8;
+        }
+        else if (endblock == 0x03){
+            // 0x3B - DEC SP | 1 8 | - - - -
+            SP--;
+            PC += 1;
+            return 8;
+        }
+        else if (endblock == 0x04){
+            // 0x3C - INC A | 1 4 | Z 0 H -
+            A++;
+            flags.Z = (A == 0); 
+            flags.N = false;
+            flags.H = (A & 0x0F) == 0; 
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x05){
+            // 0x3D - DEC A | 1 4 | Z 1 H -
+            A--;
+            flags.Z = (A == 0);
+            flags.N = true;
+            flags.H = (A & 0x0F) == 0x0F; 
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x06){
+            // 0x3E - LD A,n8 | 2 8 | - - - -
+            A = Memory::readByte(PC + 1); // Load immediate value into A
+            PC += 2;
+            return 8;
+        }
+        else if (endblock == 0x07){
+            // 0x3F - CCF | 1 4 | - 0 0 C | Complement Carry Flag
+            flags.C = !flags.C;
+            flags.N = false; 
+            flags.H = false; 
+            PC += 1;
+            return 4;
+        }
+    }
+  }
+
+  else if (block == 0x40){ // 0x01xxxxxx block
+    if (subblock == 0x00){
+        if (endblock == 0x00) {
+            // 0x40 - LD B,B | 1 4 | - - - - //Some emulators interpret LD B,B as a breakpoint though its regularly interpreted as a no-op;
+            B = B;
+            PC += 1;
+            return 4; 
+        }
+        else if (endblock == 0x01) {
+            // 0x41 - LD B,C | 1 4 | - - - -
+            B = C; 
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x02) {
+            // 0x42 - LD B,D | 1 4 | - - - -
+            B = D;
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x03) {
+            // 0x43 - LD B,E | 1 4 | - - - -
+            B = E;
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x04) {
+            // 0x44 - LD B,H | 1 4 | - - - -
+            B = H;
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x05) {
+            // 0x45 - LD B,L | 1 4 | - - - -
+            B = L;
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x06) {
+            // 0x46 - LD B,[HL] | 1 8 | - - - -
+            B = Memory::readByte(getHL());
+            PC += 1;
+            return 8;
+        }
+        else if (endblock == 0x07) {
+            // 0x47 - LD B,A | 1 4 | - - - -
+            B = A;
+            PC += 1;
+            return 4;
+        }
+    }
+    else if (subblock == 0x08){
+        if (endblock == 0x00){
+            // 0x48 - LD C,B | 1 4 | - - - -
+            C = B;
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x01){
+            // 0x49 - LD C,C | 1 4 | - - - - 
+            C = C; // No operation, C remains unchanged
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x02){
+            // 0x4A - LD C,D | 1 4 | - - - -
+            C = D;
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x03){
+            // 0x4B - LD C,E | 1 4 | - - - -
+            C = E;
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x04){
+            // 0x4C - LD C,H | 1 4 | - - - -
+            C = H;
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x05){
+            // 0x4D - LD C,L | 1 4 | - - - -
+            C = L;
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x06){
+            // 0x4E - LD C,[HL] | 1 8 | - - - -
+            C = Memory::readByte(getHL()); 
+            PC += 1;
+            return 8;
+        }
+        else if (endblock == 0x07){
+            // 0x4F - LD C,A | 1 4 | - - - -
+            C = A;
+            PC += 1;
+            return 4;
+        }
+    }
+    else if (subblock == 0x10){
+        if (endblock == 0x00){
+            // 0x50 - LD D,B | 1 4 | - - - -
+            D = B;
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x01){
+            // 0x51 - LD D,C | 1 4 | - - - -
+            D = C;
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x02){
+            // 0x52 - LD D,D | 1 4 | - - - - Some emulators interpret LD D,D as a debug message though its regularly interpreted as a no-op;
+            D = D; // No operation, D remains unchanged
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x03){
+            // 0x53 - LD D,E | 1 4 | - - - -
+            D = E;
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x04){
+            // 0x54 - LD D,H | 1 4 | - - - -
+            D = H;
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x05){
+            // 0x55 - LD D,L | 1 4 | - - - -
+            D = L;
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x06){
+            // 0x56 - LD D,[HL] | 1 8 | - - - -
+            D = Memory::readByte(getHL()); 
+            PC += 1;
+            return 8;
+        }
+        else if (endblock == 0x07){
+            // 0x57 - LD D,A | 1 4 | - - - -
+            D = A;
+            PC += 1;
+            return 4;
+        }
+    }
+    else if (subblock == 0x18){
+        if (endblock == 0x00){
+            // 0x58 - LD E,B | 1 4 | - - - -
+            E = B;
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x01){
+            // 0x59 - LD E,C | 1 4 | - - - -
+            E = C;
+            PC += 1;
+            return 4;
+        }
+        
+        else if (endblock == 0x02){
+            // 0x5A - LD E,D | 1 4 | - - - -
+            E = D;
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x03){
+            // 0x5B - LD E,E | 1 4 | - - - - 
+            E = E;
+            PC += 1;
+            return 4; 
+        }
+        else if (endblock == 0x04){
+            // 0x5C - LD E,H | 1 4 | - - - -
+            E = H;
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x05){
+            // 0x5D - LD E,L | 1 4 | - - - -
+            E = L;
+            PC += 1;
+            return 4;
+        }
+        else if (endblock == 0x06){
+            // 0x5E - LD E,[HL] | 1 8 | - - - -
+            E = Memory::readByte(getHL());
+            PC += 1;
+            return 8;
+        }
+        else if (endblock == 0x07){
+            // 0x5F - LD E,A | 1 4 | - - - -
+            E = A;
+            PC += 1;
+            return 4;
+        }
+    }
+    else if (subblock == 0x20){
+        if (endblock == 0x00){
+            
+        }
+        else if (endblock == 0x01){
+
+        }
+        else if (endblock == 0x02){
+            
+        }
+        else if (endblock == 0x03){
             
         }
         else if (endblock == 0x04){
@@ -571,96 +980,509 @@ int SM83::executeOpcode(){
             
         }
         else if (endblock == 0x07){
-
+            
         }
 
     }
-    else if (subblock == 0x30){
-
-    }
-    else if (subblock == 0x38){
-
-    }
-  }
-
-  else if (block == 0x40){ // 0x01xxxxxx block
-    if (subblock == 0x00){
-
-    }
-    else if (subblock == 0x08){
-
-    }
-    else if (subblock == 0x10){
-
-    }
-    else if (subblock == 0x18){
-
-    }
-    else if (subblock == 0x20){
-
-    }
     else if (subblock == 0x28){
+        if (endblock == 0x00){
+            
+        }
+        else if (endblock == 0x01){
 
+        }
+        else if (endblock == 0x02){
+            
+        }
+        else if (endblock == 0x03){
+            
+        }
+        else if (endblock == 0x04){
+            
+        }
+        else if (endblock == 0x05){
+            
+        }
+        else if (endblock == 0x06){
+            
+        }
+        else if (endblock == 0x07){
+            
+        }
     }
     else if (subblock == 0x30){
+        if (endblock == 0x00){
+            
+        }
+        else if (endblock == 0x01){
 
+        }
+        else if (endblock == 0x02){
+            
+        }
+        else if (endblock == 0x03){
+            
+        }
+        else if (endblock == 0x04){
+            
+        }
+        else if (endblock == 0x05){
+            
+        }
+        else if (endblock == 0x06){
+            
+        }
+        else if (endblock == 0x07){
+            
+        }
     }
     else if (subblock == 0x38){
+        if (endblock == 0x00){
+            
+        }
+        else if (endblock == 0x01){
 
+        }
+        else if (endblock == 0x02){
+            
+        }
+        else if (endblock == 0x03){
+            
+        }
+        else if (endblock == 0x04){
+            
+        }
+        else if (endblock == 0x05){
+            
+        }
+        else if (endblock == 0x06){
+            
+        }
+        else if (endblock == 0x07){
+            
+        }
     }
   }
 
   else if (block == 0x80){ // 0x10xxxxxx block
     if (subblock == 0x00){
+        if (endblock == 0x00){
+            
+        }
+        else if (endblock == 0x01){
 
+        }
+        else if (endblock == 0x02){
+            
+        }
+        else if (endblock == 0x03){
+            
+        }
+        else if (endblock == 0x04){
+            
+        }
+        else if (endblock == 0x05){
+            
+        }
+        else if (endblock == 0x06){
+            
+        }
+        else if (endblock == 0x07){
+            
+        }
     }
     else if (subblock == 0x08){
+        if (endblock == 0x00){
+            
+        }
+        else if (endblock == 0x01){
 
+        }
+        else if (endblock == 0x02){
+            
+        }
+        else if (endblock == 0x03){
+            
+        }
+        else if (endblock == 0x04){
+            
+        }
+        else if (endblock == 0x05){
+            
+        }
+        else if (endblock == 0x06){
+            
+        }
+        else if (endblock == 0x07){
+            
+        }
     }
     else if (subblock == 0x10){
+        if (endblock == 0x00){
+            
+        }
+        else if (endblock == 0x01){
 
+        }
+        else if (endblock == 0x02){
+            
+        }
+        else if (endblock == 0x03){
+            
+        }
+        else if (endblock == 0x04){
+            
+        }
+        else if (endblock == 0x05){
+            
+        }
+        else if (endblock == 0x06){
+            
+        }
+        else if (endblock == 0x07){
+            
+        }
     }
     else if (subblock == 0x18){
+        if (endblock == 0x00){
+            
+        }
+        else if (endblock == 0x01){
 
+        }
+        else if (endblock == 0x02){
+            
+        }
+        else if (endblock == 0x03){
+            
+        }
+        else if (endblock == 0x04){
+            
+        }
+        else if (endblock == 0x05){
+            
+        }
+        else if (endblock == 0x06){
+            
+        }
+        else if (endblock == 0x07){
+            
+        }
     }
     else if (subblock == 0x20){
+        if (endblock == 0x00){
+            
+        }
+        else if (endblock == 0x01){
 
+        }
+        else if (endblock == 0x02){
+            
+        }
+        else if (endblock == 0x03){
+            
+        }
+        else if (endblock == 0x04){
+            
+        }
+        else if (endblock == 0x05){
+            
+        }
+        else if (endblock == 0x06){
+            
+        }
+        else if (endblock == 0x07){
+            
+        }
     }
     else if (subblock == 0x28){
+        if (endblock == 0x00){
+            
+        }
+        else if (endblock == 0x01){
 
+        }
+        else if (endblock == 0x02){
+            
+        }
+        else if (endblock == 0x03){
+            
+        }
+        else if (endblock == 0x04){
+            
+        }
+        else if (endblock == 0x05){
+            
+        }
+        else if (endblock == 0x06){
+            
+        }
+        else if (endblock == 0x07){
+            
+        }
     }
     else if (subblock == 0x30){
+        if (endblock == 0x00){
+            
+        }
+        else if (endblock == 0x01){
 
+        }
+        else if (endblock == 0x02){
+            
+        }
+        else if (endblock == 0x03){
+            
+        }
+        else if (endblock == 0x04){
+            
+        }
+        else if (endblock == 0x05){
+            
+        }
+        else if (endblock == 0x06){
+            
+        }
+        else if (endblock == 0x07){
+            
+        }
     }
     else if (subblock == 0x38){
+        if (endblock == 0x00){
+            
+        }
+        else if (endblock == 0x01){
 
+        }
+        else if (endblock == 0x02){
+            
+        }
+        else if (endblock == 0x03){
+            
+        }
+        else if (endblock == 0x04){
+            
+        }
+        else if (endblock == 0x05){
+            
+        }
+        else if (endblock == 0x06){
+            
+        }
+        else if (endblock == 0x07){
+            
+        }
     }
   }
 
   else if (block == 0xC0){ // 0x11xxxxxx block
     if (subblock == 0x00){
+        if (endblock == 0x00){
+            
+        }
+        else if (endblock == 0x01){
 
+        }
+        else if (endblock == 0x02){
+            
+        }
+        else if (endblock == 0x03){
+            
+        }
+        else if (endblock == 0x04){
+            
+        }
+        else if (endblock == 0x05){
+            
+        }
+        else if (endblock == 0x06){
+            
+        }
+        else if (endblock == 0x07){
+            
+        }
     }
     else if (subblock == 0x08){
+        if (endblock == 0x00){
+            
+        }
+        else if (endblock == 0x01){
 
+        }
+        else if (endblock == 0x02){
+            
+        }
+        else if (endblock == 0x03){
+            
+        }
+        else if (endblock == 0x04){
+            
+        }
+        else if (endblock == 0x05){
+            
+        }
+        else if (endblock == 0x06){
+            
+        }
+        else if (endblock == 0x07){
+            
+        }
     }
     else if (subblock == 0x10){
+        if (endblock == 0x00){
+            
+        }
+        else if (endblock == 0x01){
 
+        }
+        else if (endblock == 0x02){
+            
+        }
+        else if (endblock == 0x03){
+            
+        }
+        else if (endblock == 0x04){
+            
+        }
+        else if (endblock == 0x05){
+            
+        }
+        else if (endblock == 0x06){
+            
+        }
+        else if (endblock == 0x07){
+            
+        }
     }
     else if (subblock == 0x18){
+        if (endblock == 0x00){
+            
+        }
+        else if (endblock == 0x01){
 
+        }
+        else if (endblock == 0x02){
+            
+        }
+        else if (endblock == 0x03){
+            
+        }
+        else if (endblock == 0x04){
+            
+        }
+        else if (endblock == 0x05){
+            
+        }
+        else if (endblock == 0x06){
+            
+        }
+        else if (endblock == 0x07){
+            
+        }
     }
     else if (subblock == 0x20){
+        if (endblock == 0x00){
+            
+        }
+        else if (endblock == 0x01){
 
+        }
+        else if (endblock == 0x02){
+            
+        }
+        else if (endblock == 0x03){
+            
+        }
+        else if (endblock == 0x04){
+            
+        }
+        else if (endblock == 0x05){
+            
+        }
+        else if (endblock == 0x06){
+            
+        }
+        else if (endblock == 0x07){
+            
+        }
     }
     else if (subblock == 0x28){
+        if (endblock == 0x00){
+            
+        }
+        else if (endblock == 0x01){
 
+        }
+        else if (endblock == 0x02){
+            
+        }
+        else if (endblock == 0x03){
+            
+        }
+        else if (endblock == 0x04){
+            
+        }
+        else if (endblock == 0x05){
+            
+        }
+        else if (endblock == 0x06){
+            
+        }
+        else if (endblock == 0x07){
+            
+        }
     }
     else if (subblock == 0x30){
+        if (endblock == 0x00){
+            
+        }
+        else if (endblock == 0x01){
 
+        }
+        else if (endblock == 0x02){
+            
+        }
+        else if (endblock == 0x03){
+            
+        }
+        else if (endblock == 0x04){
+            
+        }
+        else if (endblock == 0x05){
+            
+        }
+        else if (endblock == 0x06){
+            
+        }
+        else if (endblock == 0x07){
+            
+        }
     }
     else if (subblock == 0x38){
+        if (endblock == 0x00){
+            
+        }
+        else if (endblock == 0x01){
 
+        }
+        else if (endblock == 0x02){
+            
+        }
+        else if (endblock == 0x03){
+            
+        }
+        else if (endblock == 0x04){
+            
+        }
+        else if (endblock == 0x05){
+            
+        }
+        else if (endblock == 0x06){
+            
+        }
+        else if (endblock == 0x07){
+            
+        }
     }
   }
 
