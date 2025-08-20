@@ -755,7 +755,7 @@ int SM83::executeOpcode(){
     }
   }
 
-  else if (block == 0x40){ // 0x01xxxxxx block
+  else if (block == 0x40){ // 0x01xxxxxx block | LOAD Registers Instructions
     if (subblock == 0x00){
         if (endblock == 0x00) {
             // 0x40 - LD B,B | 1 4 | - - - - //Some emulators interpret LD B,B as a breakpoint though its regularly interpreted as a no-op;
@@ -959,107 +959,210 @@ int SM83::executeOpcode(){
     }
     else if (subblock == 0x20){
         if (endblock == 0x00){
-            
+            // 0x60 - LD H,B | 1 4 | - - - -
+            H = B;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x01){
-
+            // 0x61 - LD H,C | 1 4 | - - - -
+            H = C;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x02){
-            
+            // 0x62 - LD H,D | 1 4 | - - - -
+            H = D;
+            PC += 1;
+            return 4;
+        
         }
         else if (endblock == 0x03){
-            
+            // 0x63 - LD H,E | 1 4 | - - - -
+            H = E;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x04){
-            
+            // 0x64 - LD H,H | 1 4 | - - - -
+            H = H; // No operation
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x05){
-            
+            // 0x65 - LD H,L | 1 4 | - - - -
+            H = L;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x06){
-            
+            // 0x66 - LD H,[HL] | 1 8 | - - - -
+            uint16_t hl = getHL();
+            H = Memory::readByte(hl); 
+            PC += 1;
+            return 8;
         }
         else if (endblock == 0x07){
-            
+            // 0x67 - LD H,A | 1 4 | - - - -
+            H = A;
+            PC += 1;
+            return 4;
         }
-
     }
     else if (subblock == 0x28){
         if (endblock == 0x00){
-            
+            // 0x68 - LD L,B | 1 4 | - - - -
+            L = B;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x01){
-
+            // 0x69 - LD L,C | 1 4 | - - - -
+            L = C;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x02){
-            
+            // 0x6A - LD L,D | 1 4 | - - - -
+            L = D;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x03){
-            
+            // 0x6B - LD L,E | 1 4 | - - - -
+            L = E;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x04){
-            
+            // 0x6C - LD L,H | 1 4 | - - - -
+            L = H;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x05){
-            
+            // 0x6D - LD L,L | 1 4 | - - - -
+            L = L; // No operation
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x06){
-            
+            // 0x6E - LD L,[HL] | 1 8 | - - - -
+            uint16_t hl = getHL();
+            L = Memory::readByte(hl); 
+            PC += 1;
+            return 8;            
         }
         else if (endblock == 0x07){
-            
+            // 0x6F - LD L,A | 1 4 | - - - -
+            L = A;
+            PC += 1;
+            return 4;
         }
     }
     else if (subblock == 0x30){
         if (endblock == 0x00){
-            
+            // 0x70 - LD [HL],B | 1 8 | - - - -
+            Memory::writeByte(getHL(), B); // Write B to memory at address HL
+            PC += 1;
+            return 8;
         }
         else if (endblock == 0x01){
-
+            // 0x71 - LD [HL],C | 1 8 | - - - -
+            Memory::writeByte(getHL(), C); // Write C to memory at address HL
+            PC += 1;
+            return 8;
         }
         else if (endblock == 0x02){
-            
+            // 0x72 - LD [HL],D | 1 8 | - - - -
+            Memory::writeByte(getHL(), D); 
+            PC += 1;
+            return 8;
         }
         else if (endblock == 0x03){
-            
+            // 0x73 - LD [HL],E | 1 8 | - - - -
+            Memory::writeByte(getHL(), E); 
+            PC += 1;
+            return 8;
         }
         else if (endblock == 0x04){
-            
+            // 0x74 - LD [HL],H | 1 8 | - - - -
+            Memory::writeByte(getHL(), H);
+            PC += 1;
+            return 8;
         }
         else if (endblock == 0x05){
-            
+            // 0x75 - LD [HL],L | 1 8 | - - - -
+            Memory::writeByte(getHL(), L);
+            PC += 1;
+            return 8;
         }
         else if (endblock == 0x06){
-            
+            // 0x76 - HALT | 1 4 | - - - -
+            // The HALT instruction stops the CPU until an interrupt occurs.
+            // This is a placeholder for the HALT instruction, which will be handled in the CPU
+            // emulation loop.
+            // In a real implementation, you would set a flag (IME flag) to indicate that the CPU is halted
+            // and wait for an interrupt to resume execution.
+            // For now, we will just return 4 T-states.
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x07){
-            
+            // 0x77 - LD [HL],A | 1 8 | - - - -
+            Memory::writeByte(getHL(), A); // Write A to memory at address HL
+            PC += 1;
+            return 8;
         }
     }
     else if (subblock == 0x38){
         if (endblock == 0x00){
-            
+            // 0x78 - LD A,B | 1 4 | - - - -
+            A = B;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x01){
-
+            // 0x79 - LD A,C | 1 4 | - - - -
+            A = C;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x02){
-            
+            // 0x7A - LD A,D | 1 4 | - - - -
+            A = D;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x03){
-            
+            // 0x7B - LD A,E | 1 4 | - - - -
+            A = E;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x04){
-            
+            // 0x7C - LD A,H | 1 4 | - - - -
+            A = H;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x05){
-            
+            // 0x7D - LD A,L | 1 4 | - - - -
+            A = L;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x06){
-            
+            // 0x7E - LD A,[HL] | 1 8 | - - - -
+            A = Memory::readByte(getHL()); 
+            PC += 1;
+            return 8;
         }
         else if (endblock == 0x07){
-            
+            // 0x7F - LD A,A | 1 4 | - - - -
+            A = A; // No operation
+            PC += 1;
+            return 4;
         }
     }
   }
