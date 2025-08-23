@@ -1262,27 +1262,100 @@ int SM83::executeOpcode(){
     else if (subblock == 0x08){
         if (endblock == 0x00){
             // 0x88 - ADC A,B | 1 4 | Z 0 H C
+            uint8_t carry = flags.C ? 1 : 0;
+            uint8_t result = A + B + carry;
+            flags.C = (result < A) || (carry && result == A);
+            flags.H = ((A & 0x0F) + (B & 0x0F) + carry) > 0x0F;
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x01){
-
+            // 0x89 - ADC A,C | 1 4 | Z 0 H C
+            uint8_t carry = flags.C ? 1 : 0;
+            uint8_t result = A + C + carry;
+            flags.C = (result < A) || (carry && result == A);
+            flags.H = ((A & 0x0F) + (C & 0x0F) + carry) > 0x0F;
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x02){
-            
+            // 0x8A - ADC A,D | 1 4 | Z 0 H C
+            uint8_t carry = flags.C ? 1 : 0;
+            uint8_t result = A + D + carry;
+            flags.C = (result < A) || (carry && result == A);
+            flags.H = ((A & 0x0F) + (D & 0x0F) + carry) > 0x0F;
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = false;
+            PC += 1;
+            return 4;            
         }
         else if (endblock == 0x03){
-            
+            // 0x8B - ADC A,E | 1 4 | Z 0 H C
+            uint8_t carry = flags.C ? 1 : 0;
+            uint8_t result = A + E + carry;
+            flags.C = (result < A) || (carry && result == A);
+            flags.H = ((A & 0x0F) + (E & 0x0F) + carry) > 0x0F;
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = false;
+            PC += 1;
+            return 4;            
         }
         else if (endblock == 0x04){
-            
+            // 0x8C - ADC A,H | 1 4 | Z 0 H C
+            uint8_t carry = flags.C ? 1 : 0;
+            uint8_t result = A + H + carry;
+            flags.C = (result < A) || (carry && result == A);
+            flags.H = ((A & 0x0F) + (H & 0x0F) + carry) > 0x0F;
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x05){
-            
+            // 0x8D - ADC A,L | 1 4 | Z 0 H C
+            uint8_t carry = flags.C ? 1 : 0;
+            uint8_t result = A + L + carry;
+            flags.C = (result < A) || (carry && result == A);
+            flags.H = ((A & 0x0F) + (L & 0x0F) + carry) > 0x0F;
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = false;
+            PC += 1;
+            return 4;            
         }
         else if (endblock == 0x06){
-            
+            // 0x8E - ADC A,[HL] | 1 8 | Z 0 H C
+            uint8_t carry = flags.C ? 1 : 0;
+            uint8_t value = Memory::readByte(getHL());
+            uint8_t result = A + value + carry;
+            flags.C = (result < A) || (carry && result == A);
+            flags.H = ((A & 0x0F) + (value & 0x0F) + carry) > 0x0F;
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = false;
+            PC += 1;
+            return 8;            
         }
         else if (endblock == 0x07){
-            
+            // 0x8F - ADC A,A | 1 4 | Z 0 H C
+            uint8_t carry = flags.C ? 1 : 0;
+            uint8_t result = A + A + carry;
+            flags.C = (result < A) || (carry && result == A);
+            flags.H = ((A & 0x0F) + (A & 0x0F) + carry) > 0x0F;
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = false;
+            PC += 1;
+            return 4;
         }
     }
     else if (subblock == 0x10){
