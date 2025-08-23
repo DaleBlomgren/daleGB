@@ -1170,33 +1170,98 @@ int SM83::executeOpcode(){
   else if (block == 0x80){ // 0x10xxxxxx block
     if (subblock == 0x00){
         if (endblock == 0x00){
-            
+            // 0x80 - ADD A,B | 1 4 | Z 0 H C
+            uint8_t result = A + B;
+            flags.C = (result < A);
+            flags.H = ((A & 0x0F) + (B & 0x0F)) > 0x0F; // Set H flag if there was a half carry in the operation
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x01){
-
+            // 0x81 - ADD A,C | 1 4 | Z 0 H C
+            uint8_t result = A + C;
+            flags.C = (result < A);
+            flags.H = ((A & 0x0F) + (C & 0x0F)) > 0x0F;
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = 0;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x02){
-            
+            // 0x82 - ADD A,D | 1 4 | Z 0 H C
+            uint8_t result = A + D;
+            flags.C = (result < A);
+            flags.H = ((A & 0x0F) + (D & 0x0F)) > 0x0F;
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = 0;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x03){
-            
+            // 0x83 - ADD A,E | 1 4 | Z 0 H C
+            uint8_t result = A + E;
+            flags.C = (result < A);
+            flags.H = ((A & 0x0F) + (E & 0x0F)) > 0x0F;
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = 0;
+            PC += 1;
+            return 4; 
         }
         else if (endblock == 0x04){
-            
+            // 0x84 - ADD A,H | 1 4 | Z 0 H C
+            uint8_t result = A + H;
+            flags.C = (result < A);
+            flags.H = ((A & 0x0F) + (H & 0x0F)) > 0x0F;
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x05){
-            
+            // 0x85 - ADD A,L | 1 4 | Z 0 H C
+            uint8_t result = A + L;
+            flags.C = (result < A);
+            flags.H = ((A & 0x0F) + (H & 0x0F)) > 0x0F;
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = false;
+            PC += 1;
+            return 4; 
         }
         else if (endblock == 0x06){
-            
+            // 0x86 - ADD A,[HL] | 1 8 | Z 0 H C
+            uint8_t value = Memory::readByte(getHL());
+            uint8_t result = A + value;
+            flags.C = (result < A);
+            flags.H = ((A & 0x0F) + (value & 0x0F)) > 0x0F;
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = false;
+            PC += 1;
+            return 8;
         }
         else if (endblock == 0x07){
-            
+            // 0x87 - ADD A,A | 1 4 | Z 0 H C
+            uint8_t result = A + A;
+            flags.C = (result < A);
+            flags.H = ((A & 0x0F) + (A & 0x0F)) > 0x0F;
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = false;
+            PC += 1;
+            return 4;
         }
     }
     else if (subblock == 0x08){
         if (endblock == 0x00){
-            
+            // 0x88 - ADC A,B | 1 4 | Z 0 H C
         }
         else if (endblock == 0x01){
 
