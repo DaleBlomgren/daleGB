@@ -1501,8 +1501,8 @@ int SM83::executeOpcode(){
             // 0x9C - SBC A,H | 1 4 | Z 1 H C
             uint8_t carry = flags.C ? 1 : 0;
             uint8_t result = A - H - carry;
-            flags.C = (A < (E + carry));
-            flags.H = (A & 0x0F) < ((E & 0x0F) + carry);
+            flags.C = (A < (H + carry));
+            flags.H = (A & 0x0F) < ((H & 0x0F) + carry);
             A = result;
             flags.Z = (A == 0);
             flags.N = true;
@@ -1510,13 +1510,40 @@ int SM83::executeOpcode(){
             return 4;
         }
         else if (endblock == 0x05){
-            
+            // 0x9D - SBC A,L | 1 4 | Z 1 H C
+            uint8_t carry = flags.C ? 1 : 0;
+            uint8_t result = A - L - carry;
+            flags.C = (A < (L + carry));
+            flags.H = (A & 0x0F) < ((L & 0x0F) + carry);
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = true;
+            PC += 1;
+            return 4;            
         }
         else if (endblock == 0x06){
-            
+            // 0x9E - SBC A,[HL] | 1 8 | Z 1 H C
+            uint8_t carry = flags.C ? 1 : 0;
+            uint8_t value = Memory::readByte(getHL());
+            uint8_t result = A - value - carry;
+            flags.C = (A < (value + carry));
+            flags.H = (A & 0x0F) < ((value & 0x0F) + carry);
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = true;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x07){
-            
+            // 0x9F - SBC A,A | 1 4 | Z 1 H -
+            uint8_t carry = flags.C ? 1 : 0;
+            uint8_t result = A - A - carry;
+            flags.H = (carry != 0);
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = true;
+            PC += 1;
+            return 4;
         }
     }
     else if (subblock == 0x20){
