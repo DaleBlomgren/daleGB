@@ -1798,28 +1798,84 @@ int SM83::executeOpcode(){
     else if (subblock == 0x38){
         if (endblock == 0x00){
             // 0xB8 - CP A,B | 1 4 | Z 1 H C
-            
+            uint8_t result = A - B;
+            flags.C = (A < B);
+            flags.H = (A & 0x0F) < (B & 0x0F); 
+            flags.Z = (result == 0);
+            flags.N = true;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x01){
-
+            // 0xB9 - CP A,C | 1 4 | Z 1 H C
+            uint8_t result = A - C;
+            flags.C = (A < C);
+            flags.H = (A & 0x0F) < (C & 0x0F); 
+            flags.Z = (result == 0);
+            flags.N = true;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x02){
-            
+            // 0xBA - CP A,D | 1 4 | Z 1 H C
+            uint8_t result = A - D;
+            flags.C = (A < D);
+            flags.H = (A & 0x0F) < (D & 0x0F); 
+            flags.Z = (result == 0);
+            flags.N = true;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x03){
-            
+            // 0xBB - CP A,E | 1 4 | Z 1 H C
+            uint8_t result = A - E;
+            flags.C = (A < E);
+            flags.H = (A & 0x0F) < (E & 0x0F); 
+            flags.Z = (result == 0);
+            flags.N = true;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x04){
-            
+            // 0xBC - CP A,H | 1 4 | Z 1 H C
+            uint8_t result = A - H;
+            flags.C = (A < H);
+            flags.H = (A & 0x0F) < (H & 0x0F); 
+            flags.Z = (result == 0);
+            flags.N = true;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x05){
-            
+            // 0xBD - CP A,L | 1 4 | Z 1 H C
+            uint8_t result = A - L;
+            flags.C = (A < L);
+            flags.H = (A & 0x0F) < (L & 0x0F); 
+            flags.Z = (result == 0);
+            flags.N = true;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x06){
-            
+            // 0xBE - CP A,[HL] | 1 8 | Z 1 H C
+            uint8_t value = Memory::readByte(getHL());
+            uint8_t result = A - value;
+            flags.C = (A < value);
+            flags.H = (A & 0x0F) < (value & 0x0F); 
+            flags.Z = (result == 0);
+            flags.N = true;
+            PC += 1;
+            return 8;
         }
         else if (endblock == 0x07){
-            
+            // 0xBF - CP A,A | 1 4 | 1 1 0 0
+            A - A; //no op
+            flags.Z = true;
+            flags.N = true;
+            flags.H = false;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
     }
   }
