@@ -1532,7 +1532,7 @@ int SM83::executeOpcode(){
             flags.Z = (A == 0);
             flags.N = true;
             PC += 1;
-            return 4;
+            return 8;
         }
         else if (endblock == 0x07){
             // 0x9F - SBC A,A | 1 4 | Z 1 H -
@@ -1548,84 +1548,256 @@ int SM83::executeOpcode(){
     }
     else if (subblock == 0x20){
         if (endblock == 0x00){
-            
+            // 0xA0 - AND A,B | 1 4 | Z 0 1 0
+            A = A & B;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = true;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x01){
-
+            // 0xA1 - AND A,C | 1 4 | Z 0 1 0
+            A = A & C;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = true;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x02){
-            
+            // 0xA2 - AND A,D | 1 4 | Z 0 1 0
+            A = A & D;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = true;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x03){
-            
+            // 0xA3 - AND A,E | 1 4 | Z 0 1 0
+            A = A & E;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = true;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x04){
-            
+            // 0xA4 - AND A,H | 1 4 | Z 0 1 0
+            A = A & H;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = true;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x05){
-            
+            // 0xA5 - AND A,L | 1 4 | Z 0 1 0
+            A = A & L;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = true;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x06){
-            
+            // 0xA6 - AND A,[HL] | 1 8 | Z 0 1 0
+            uint8_t value = Memory::readByte(getHL());
+            A = A & value;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = true;
+            flags.C = false;
+            PC += 1;
+            return 8;
         }
         else if (endblock == 0x07){
-            
+            // 0xA7 - AND A,A | 1 4 | Z 0 1 0
+            A = A & A; // No operation
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = true;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
     }
     else if (subblock == 0x28){
         if (endblock == 0x00){
-            
+            // 0xA8 - XOR A,B | 1 4 | Z 0 0 0
+            A = A ^ B;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = false;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x01){
-
+            // 0xA9 - XOR A,C | 1 4 | Z 0 0 0
+            A = A ^ C;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = false;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x02){
-            
+            // 0xAA - XOR A,D | 1 4 | Z 0 0 0
+            A = A ^ D;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = false;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x03){
-            
+            // 0xAB - XOR A,E | 1 4 | Z 0 0 0
+            A = A ^ E;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = false;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x04){
-            
+            // 0xAC - XOR A, H | 1 4 | Z 0 0 0
+            A = A ^ H;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = false;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x05){
-            
+            // 0xAD - XOR A,L | 1 4 | Z 0 0 0
+            A = A ^ L;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = false;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x06){
-            
+            // 0xAE - XOR A,[HL] | 1 8 | Z 0 0 0
+            uint8_t value = Memory::readByte(getHL());
+            A = A ^ value;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = false;
+            flags.C = false;
+            PC += 1;
+            return 8;
         }
         else if (endblock == 0x07){
-            
+            // 0xAF - XOR A,A |1 4 | 1 0 0 0
+            A = A ^ A; // No operation
+            flags.Z = true;
+            flags.N = false;
+            flags.H = false;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
     }
     else if (subblock == 0x30){
         if (endblock == 0x00){
-            
+            // 0xB0 - OR A,B | 1 4 | Z 0 0 0
+            A = A | B;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = false;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x01){
-
+            // 0xB1 - OR A,C | 1 4 | Z 0 0 0
+            A = A | C;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = false;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x02){
-            
+            // 0xB2 - OR A,D | 1 4 | Z 0 0 0
+            A = A | D;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = false;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x03){
-            
+            // 0xB3 - OR A,E | 1 4 | Z 0 0 0
+            A = A | E;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = false;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x04){
-            
+            // 0xB4 - OR A,H | 1 4 | Z 0 0 0
+            A = A | H;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = false;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x05){
-            
+            // 0xB5 - OR A,L | 1 4 | Z 0 0 0
+            A = A | L;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = false;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x06){
-            
+            // 0xB6 - OR A,[HL] | 1 8 | Z 0 0 0
+            uint8_t value = Memory::readByte(getHL());
+            A = A | value;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = false;
+            flags.C = false;
+            PC += 1;
+            return 8;
         }
         else if (endblock == 0x07){
-            
+            // 0xB7 - OR A,A | 1 4 | Z 0 0 0
+            A = A | A; // No operation
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = false;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
     }
     else if (subblock == 0x38){
         if (endblock == 0x00){
+            // 0xB8 - CP A,B | 1 4 | Z 1 H C
             
         }
         else if (endblock == 0x01){
