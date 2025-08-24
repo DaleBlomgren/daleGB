@@ -1360,45 +1360,154 @@ int SM83::executeOpcode(){
     }
     else if (subblock == 0x10){
         if (endblock == 0x00){
-            
+            // 0x90 - SUB A,B | 1 4 | Z 1 H C
+            uint8_t result = A - B;
+            flags.C = (A < B);
+            flags.H = (A & 0x0F) < (B & 0x0F); // Set H flag if there was a half borrow in the operation
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = true;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x01){
-
+            // 0x91 - SUB A,C | 1 4 | Z 1 H C
+            uint8_t result = A - C;
+            flags.C = (A < C);
+            flags.H = (A & 0x0F) < (C & 0x0F);
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = true;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x02){
-            
+            // 0x92 - SUB A,D | 1 4 | Z 1 H C
+            uint8_t result = A - D;
+            flags.C = (A < D);
+            flags.H = (A & 0x0F) < (D & 0x0F);
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = true;
+            PC += 1;
+            return 4;            
         }
         else if (endblock == 0x03){
-            
+            // 0x93 - SUB A,E | 1 4 | Z 1 H C
+            uint8_t result = A - E;
+            flags.C = (A < E);
+            flags.H = (A & 0x0F) < (E & 0x0F);
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = true;
+            PC += 1;
+            return 4;            
         }
         else if (endblock == 0x04){
-            
+            // 0x94 - SUB A,H | 1 4 | Z 1 H C
+            uint8_t result = A - H;
+            flags.C = (A < H);
+            flags.H = (A & 0x0F) < (H & 0x0F);
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = true;
+            PC += 1;
+            return 4;            
         }
         else if (endblock == 0x05){
-            
+            // 0x95 - SUB A,L | 1 4 | Z 1 H C
+            uint8_t result = A - L;
+            flags.C = (A < L);
+            flags.H = (A & 0x0F) < (L & 0x0F);
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = true;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x06){
-            
+            // 0x96 - SUB A,[HL] | 1 8 | Z 1 H C
+            uint8_t value = Memory::readByte(getHL());
+            uint8_t result = A - value;
+            flags.C = (A < value);
+            flags.H = (A & 0x0F) < (value & 0x0F);
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = true;
+            PC += 1;
+            return 8; 
         }
         else if (endblock == 0x07){
-            
+            // 0x97 - SUB A,A | 1 4 | 1 1 0 0
+            A -= A;
+            flags.Z = true;
+            flags.N = true;
+            flags.H = false;
+            flags.C = false;
+            PC += 1;
+            return 4;
         }
     }
     else if (subblock == 0x18){
         if (endblock == 0x00){
-            
+            // 0x98 - SBC A,B | 1 4 | Z 1 H C
+            uint8_t carry = flags.C ? 1 : 0;
+            uint8_t result = A - B - carry;
+            flags.C = (A < (B + carry));
+            flags.H = (A & 0x0F) < ((B & 0x0F) + carry);
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = true;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x01){
-
+            // 0x99 - SBC A,C | 1 4 | Z 1 H C
+            uint8_t carry = flags.C ? 1 : 0;
+            uint8_t result = A - C - carry;
+            flags.C = (A < (C + carry));
+            flags.H = (A & 0x0F) < ((C & 0x0F) + carry);
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = true;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x02){
-            
+            // 0x9A - SBC A,D | 1 4 | Z 1 H C
+            uint8_t carry = flags.C ? 1 : 0;
+            uint8_t result = A - D - carry;
+            flags.C = (A < (D + carry));
+            flags.H = (A & 0x0F) < ((D & 0x0F) + carry);
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = true;
+            PC += 1;
+            return 4;            
         }
         else if (endblock == 0x03){
-            
+            // 0x9B - SBC A,E | 1 4 | Z 1 H C
+            uint8_t carry = flags.C ? 1 : 0;
+            uint8_t result = A - E - carry;
+            flags.C = (A < (E + carry));
+            flags.H = (A & 0x0F) < ((E & 0x0F) + carry);
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = true;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x04){
-            
+            // 0x9C - SBC A,H | 1 4 | Z 1 H C
+            uint8_t carry = flags.C ? 1 : 0;
+            uint8_t result = A - H - carry;
+            flags.C = (A < (E + carry));
+            flags.H = (A & 0x0F) < ((E & 0x0F) + carry);
+            A = result;
+            flags.Z = (A == 0);
+            flags.N = true;
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x05){
             
