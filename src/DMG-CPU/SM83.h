@@ -1,5 +1,7 @@
 class SM83
 {
+    friend namespace CBInstructions;  // Allow CB instructions to access private members
+    
     struct flags{
         bool Z; // Zero Flag
         bool N; // Subtract Flag
@@ -33,7 +35,9 @@ class SM83
         uint16_t getDE();
         uint16_t getHL();
         uint16_t getAF();
-        int referenceTableN();
-        int referenceTableCB();
+    //    int referenceTableN();
+    //    int referenceTableCB();
+    //    int executeCB();
+        flags flags;
         uint64_t cycles;
 };

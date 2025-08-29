@@ -8,8 +8,8 @@
  * Will Emulate 'DMG' version CPU
 ******************************/
 #include "SM83.h"
-#include "Opcodes.h"
 #include "../Memory/Memory.h"
+#include "executeCB.h"
 #include <iostream>
 #include <cstdint>
 
@@ -48,11 +48,12 @@ class SM83
         uint16_t getDE();
         uint16_t getHL();
         uint16_t getAF();
-        int referenceTableN();
-        int referenceTableCB();
+//        int referenceTableN();
+//        int referenceTableCB();
+//        int executeCB();
+        flags flags;
         uint64_t cycles;
 };
-
 
 SM83::SM83()
 {
@@ -2020,7 +2021,8 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x03){
             // 0xCB - PREFIX CB | 1 4 | - - - -
-            
+            PC += 1;
+            return (executeCB() + 4); // CB prefixed opcodes take an extra 4 cycles
         }
         else if (endblock == 0x04){
             
