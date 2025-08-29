@@ -1883,41 +1883,143 @@ int SM83::executeOpcode(){
   else if (block == 0xC0){ // 0x11xxxxxx block
     if (subblock == 0x00){
         if (endblock == 0x00){
-            
+            // 0xC0 - RET NZ | 1 20/8 | - - - -
+            if (flags.Z == false){
+                uint8_t low = Memory::readByte(SP);
+                SP += 1;
+                uint8_t high = Memory::readByte(SP);
+                SP += 1;
+                PC = (high << 8) | low;
+                return 20;
+            }
+            else{
+                PC += 1;
+                return 8;
+            }
         }
         else if (endblock == 0x01){
-
+            // 0xC1 - POP BC | 1 12 | - - - -
+            uint8_t low = Memory::readByte(SP);
+            SP += 1;
+            uint8_t high = Memory::readByte(SP);
+            SP += 1;
+            B = high;
+            C = low;
+            PC += 1;
+            return 12;
         }
         else if (endblock == 0x02){
-            
+            // 0xC2 - JP NZ, a16 | 3 16/12 | - - - -
+            if (flags.Z == false){
+                uint8_t low = Memory::readByte(PC + 1);
+                uint8_t high = Memory::readByte(PC + 2);
+                uint16_t address = (high << 8) | low;
+                PC = address;
+                return 16;
+            }
+            else{
+                PC += 3;
+                return 12;
+            }
         }
         else if (endblock == 0x03){
-            
+            // 0xC3 - JP a16 | 3 16 | - - - -
+            uint8_t low = Memory::readByte(PC + 1);
+            uint8_t high = Memory::readByte(PC + 2);
+            uint16_t address = (high << 8) | low;
+            PC = address;
+            return 16;            
         }
         else if (endblock == 0x04){
-            
+            // 0xC4 - CALL NZ, a16 | 3 24/12 | - - - -
+            if (flags.Z == false){
+                uint8_t low = Memory::readByte(PC + 1);
+                uint8_t high = Memory::readByte(PC + 2);
+                uint16_t address = (high << 8) | low;
+                SP -= 1;
+                Memory::writeByte(SP, PC + 3 >> 8); //PC is 16 bit, so push high byte first
+                SP -= 1;
+                Memory::writeByte(SP, PC + 3 & 0xFF); //then push low byte, push return address onto stack
+                PC = address;
+                return 24;
+            }
+            else{
+                PC += 3;
+                return 12;
+            }            
         }
         else if (endblock == 0x05){
-            
+            // 0xC5 - PUSH BC | 1 16 | - - - -
+            SP -= 1;
+            Memory::writeByte(SP, B); // Push high byte first
+            SP -= 1;
+            Memory::writeByte(SP, C); // Then push low byte
+            PC += 1;
+            return 16;            
         }
-        else if (endblock == 0x06){
-            
+        else if (endblock == 0x06 ){
+            // 0xC6 - ADD A,n8 | 2 8 | Z 0 H C
+            uint8_t value = Memadsffdory::readByte(PC + 1);
+            A += value;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = ((A & 0x0F) + (value & 0x0F)) > 0x0F;
+            flags.C = (A < value);
+            PC += 2;
+            return 8;            
         }
         else if (endblock == 0x07){
-            
-        }
+            // 0xC7 - RST $00 | 1 16 | - - - -
+            uint8_t n = 0x00;
+            SP -= 1;
+            Memory::writeByte(SP, (PC + 1) >> 8); // Push high byte first, not the same address as PC as it would loop
+            SP -= 1;
+            Memory::writeByte(SP, (PC + 1) & 0xFF); // Then push low byte
+            PC = n;
+            return 16;
+        }   
     }
     else if (subblock == 0x08){
         if (endblock == 0x00){
-            
+            // 0xC8 - RET Z | 1 20/8 | - - - -
+            if (flags.Z == true){ //return from subroutine if Z flag is set
+                uint8_t low = Memory::readByte(SP);
+                SP += 1;
+                uint8_t high = Memory::readByte(SP);
+                SP += 1;
+                PC = (high << 8) | low;
+                return 20;                
+            }
+            else{
+                PC += 1;
+                return 8;
+            }            
         }
         else if (endblock == 0x01){
-
+            // 0xC9 - RET | 1 16 | - - - -
+            uint8_t low = Memory::readByte(SP);
+            SP += 1;
+            uint8_t high = Memory::readByte(SP);
+            SP += 1;
+            PC = (high << 8) | low;
+            return 16;
         }
         else if (endblock == 0x02){
-            
+            // 0xCA - JP Z, a16 | 3 16/12 | - - - -
+            if (flags.Z == true){
+                uint8_t low = Memory::readByte(PC + 1);
+                uint8_t high = Memory::readByte(PC + 2);
+                uint16_t address = (high << 8) | low;
+                PC = address;
+                return 16;
+            }
+            else{
+                PC += 3;
+                return 12;
+            } 
         }
         else if (endblock == 0x03){
+            // 0xCB - PREFIX CB | 1 4 | - - - -
             
         }
         else if (endblock == 0x04){
