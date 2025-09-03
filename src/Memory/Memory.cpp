@@ -56,6 +56,7 @@ uint8_t Memory::readByte(uint16_t address) const {
     }
     return 0; // Return 0 if address is out of bounds
 }
+
 void Memory::writeByte(uint16_t address, uint8_t value) {
     if (address < memorybank.size()) {
         memorybank[address] = value;

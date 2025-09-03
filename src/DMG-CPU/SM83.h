@@ -14,6 +14,8 @@ class SM83
         int movBootRomToMemory();
         void pauseExecution();
         void resumeExecution();
+        void IMEEnable(); //enable interrupt master enable flag
+        void IMEDisable(); //disable interrupt master enable flag
         void setFlags(uint8_t fbits);
         void resetFlags();
         void unsetFlags(uint8_t fbits);
@@ -39,5 +41,6 @@ class SM83
     //    int referenceTableCB();
     //    int executeCB();
         flags flags;
+        bool IME; // Interrupt Master Enable Flag
         uint64_t cycles;
 };

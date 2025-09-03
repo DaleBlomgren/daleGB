@@ -19,7 +19,7 @@ int executeCB() {
                 flags.Z = (B == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 8;                
             }
             else if (endblock == 0x01){
@@ -30,7 +30,7 @@ int executeCB() {
                 flags.Z = (C == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
@@ -41,7 +41,7 @@ int executeCB() {
                 flags.Z = (D == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 8;                
             }
             else if (endblock == 0x03){
@@ -52,7 +52,7 @@ int executeCB() {
                 flags.Z = (E == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 8;                
             }
             else if (endblock == 0x04){
@@ -63,7 +63,7 @@ int executeCB() {
                 flags.Z = (H == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
@@ -74,7 +74,7 @@ int executeCB() {
                 flags.Z = (L == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -86,7 +86,7 @@ int executeCB() {
                 flags.Z = (result == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 16;                
             }
             else if (endblock == 0x07){
@@ -97,7 +97,7 @@ int executeCB() {
                 flags.Z = (A == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 8;                
             }
         }
@@ -110,7 +110,7 @@ int executeCB() {
                 flags.Z = (B == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
@@ -121,7 +121,7 @@ int executeCB() {
                 flags.Z = (C == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
@@ -132,7 +132,7 @@ int executeCB() {
                 flags.Z = (D == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
@@ -143,7 +143,7 @@ int executeCB() {
                 flags.Z = (E == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;                
             }
             else if (endblock == 0x04){
@@ -154,7 +154,7 @@ int executeCB() {
                 flags.Z = (H == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;                                
             }
             else if (endblock == 0x05){
@@ -165,7 +165,7 @@ int executeCB() {
                 flags.Z = (L == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;                                                
             }
             else if (endblock == 0x06){
@@ -177,7 +177,7 @@ int executeCB() {
                 flags.Z = (result == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
@@ -188,7 +188,7 @@ int executeCB() {
                 flags.Z = (A == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -202,7 +202,7 @@ int executeCB() {
                 flags.Z = (B == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
@@ -214,7 +214,7 @@ int executeCB() {
                 flags.Z = (C == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
@@ -226,7 +226,7 @@ int executeCB() {
                 flags.Z = (D == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
@@ -238,7 +238,7 @@ int executeCB() {
                 flags.Z = (E == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
@@ -250,7 +250,7 @@ int executeCB() {
                 flags.Z = (H == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;                
             }
             else if (endblock == 0x05){
@@ -262,7 +262,7 @@ int executeCB() {
                 flags.Z = (L == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -275,7 +275,7 @@ int executeCB() {
                 flags.Z = (result == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
@@ -287,7 +287,7 @@ int executeCB() {
                 flags.Z = (A == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;   
             }
         }
@@ -301,7 +301,7 @@ int executeCB() {
                 flags.Z = (B == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
@@ -313,7 +313,7 @@ int executeCB() {
                 flags.Z = (C == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
@@ -325,7 +325,7 @@ int executeCB() {
                 flags.Z = (D == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
@@ -337,7 +337,7 @@ int executeCB() {
                 flags.Z = (E == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
@@ -349,7 +349,7 @@ int executeCB() {
                 flags.Z = (H == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
@@ -361,7 +361,7 @@ int executeCB() {
                 flags.Z = (L == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -374,7 +374,7 @@ int executeCB() {
                 flags.Z = (result == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
@@ -386,7 +386,7 @@ int executeCB() {
                 flags.Z = (A == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -399,7 +399,7 @@ int executeCB() {
                 flags.Z = (B == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
@@ -410,7 +410,7 @@ int executeCB() {
                 flags.Z = (C == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
@@ -421,7 +421,7 @@ int executeCB() {
                 flags.Z = (D == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
@@ -432,7 +432,7 @@ int executeCB() {
                 flags.Z = (E == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
@@ -443,7 +443,7 @@ int executeCB() {
                 flags.Z = (H == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
@@ -454,7 +454,7 @@ int executeCB() {
                 flags.Z = (L == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -466,7 +466,7 @@ int executeCB() {
                 flags.Z = (result == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
@@ -477,7 +477,7 @@ int executeCB() {
                 flags.Z = (A == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -490,7 +490,7 @@ int executeCB() {
                 flags.Z = (B == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
@@ -501,7 +501,7 @@ int executeCB() {
                 flags.Z = (C == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
@@ -512,7 +512,7 @@ int executeCB() {
                 flags.Z = (D == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
@@ -523,7 +523,7 @@ int executeCB() {
                 flags.Z = (E == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
@@ -534,7 +534,7 @@ int executeCB() {
                 flags.Z = (H == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
@@ -545,7 +545,7 @@ int executeCB() {
                 flags.Z = (L == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -557,7 +557,7 @@ int executeCB() {
                 flags.Z = (result == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
@@ -568,7 +568,7 @@ int executeCB() {
                 flags.Z = (A == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -581,7 +581,7 @@ int executeCB() {
                 flags.N = false;
                 flags.H = false;
                 flags.C = false;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
@@ -592,7 +592,7 @@ int executeCB() {
                 flags.N = false;
                 flags.H = false;
                 flags.C = false;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
@@ -603,7 +603,7 @@ int executeCB() {
                 flags.N = false;
                 flags.H = false;
                 flags.C = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
@@ -614,7 +614,7 @@ int executeCB() {
                 flags.N = false;
                 flags.H = false;
                 flags.C = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
@@ -625,7 +625,7 @@ int executeCB() {
                 flags.N = false;
                 flags.H = false;
                 flags.C = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
@@ -636,7 +636,7 @@ int executeCB() {
                 flags.N = false;
                 flags.H = false;
                 flags.C = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -648,7 +648,7 @@ int executeCB() {
                 flags.N = false;
                 flags.H = false;
                 flags.C = false;
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
@@ -659,7 +659,7 @@ int executeCB() {
                 flags.N = false;
                 flags.H = false;
                 flags.C = false;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -672,7 +672,7 @@ int executeCB() {
                 flags.Z = (B == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
@@ -683,7 +683,7 @@ int executeCB() {
                 flags.Z = (C == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
@@ -694,7 +694,7 @@ int executeCB() {
                 flags.Z = (D == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
@@ -705,7 +705,7 @@ int executeCB() {
                 flags.Z = (E == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
@@ -716,7 +716,7 @@ int executeCB() {
                 flags.Z = (H == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
@@ -727,7 +727,7 @@ int executeCB() {
                 flags.Z = (L == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -739,7 +739,7 @@ int executeCB() {
                 flags.Z = (result == 0);
                 flags.N = false;
                 flags.H = false;
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
@@ -750,7 +750,7 @@ int executeCB() {
                 flags.Z = (A == 0);
                 flags.N = false;
                 flags.H = false;    
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -762,7 +762,7 @@ int executeCB() {
                 flags.Z = !(B & 0x01);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
@@ -770,7 +770,7 @@ int executeCB() {
                 flags.Z = !(C & 0x01);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
@@ -778,7 +778,7 @@ int executeCB() {
                 flags.Z = !(D & 0x01);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
@@ -786,7 +786,7 @@ int executeCB() {
                 flags.Z = !(E & 0x01);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
@@ -794,7 +794,7 @@ int executeCB() {
                 flags.Z = !(H & 0x01);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
@@ -802,7 +802,7 @@ int executeCB() {
                 flags.Z = !(L & 0x01);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -811,7 +811,7 @@ int executeCB() {
                 flags.Z = !(value & 0x01);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 12;
             }
             else if (endblock == 0x07){
@@ -819,7 +819,7 @@ int executeCB() {
                 flags.Z = !(A & 0x01);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -829,7 +829,7 @@ int executeCB() {
                 flags.Z = !(B & 0x02);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
@@ -837,7 +837,7 @@ int executeCB() {
                 flags.Z = !(C & 0x02);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
@@ -845,7 +845,7 @@ int executeCB() {
                 flags.Z = !(D & 0x02);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
@@ -853,7 +853,7 @@ int executeCB() {
                 flags.Z = !(E & 0x02);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
@@ -861,7 +861,7 @@ int executeCB() {
                 flags.Z = !(H & 0x02);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
@@ -869,7 +869,7 @@ int executeCB() {
                 flags.Z = !(L & 0x02);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -878,7 +878,7 @@ int executeCB() {
                 flags.Z = !(value & 0x02);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 12;
             }
             else if (endblock == 0x07){
@@ -886,7 +886,7 @@ int executeCB() {
                 flags.Z = !(A & 0x02);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -896,7 +896,7 @@ int executeCB() {
                 flags.Z = !(B & 0x04);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
@@ -904,7 +904,7 @@ int executeCB() {
                 flags.Z = !(C & 0x04);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
@@ -912,7 +912,7 @@ int executeCB() {
                 flags.Z = !(D & 0x04);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
@@ -920,7 +920,7 @@ int executeCB() {
                 flags.Z = !(E & 0x04);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
@@ -928,7 +928,7 @@ int executeCB() {
                 flags.Z = !(H & 0x04);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
@@ -936,7 +936,7 @@ int executeCB() {
                 flags.Z = !(L & 0x04);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -945,7 +945,7 @@ int executeCB() {
                 flags.Z = !(value & 0x04);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 12;
             }
             else if (endblock == 0x07){
@@ -953,7 +953,7 @@ int executeCB() {
                 flags.Z = !(A & 0x04);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -963,7 +963,7 @@ int executeCB() {
                 flags.Z = !(B & 0x08);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
@@ -971,7 +971,7 @@ int executeCB() {
                 flags.Z = !(C & 0x08);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
@@ -979,7 +979,7 @@ int executeCB() {
                 flags.Z = !(D & 0x08);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
@@ -987,7 +987,7 @@ int executeCB() {
                 flags.Z = !(E & 0x08);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
@@ -995,7 +995,7 @@ int executeCB() {
                 flags.Z = !(H & 0x08);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
@@ -1003,7 +1003,7 @@ int executeCB() {
                 flags.Z = !(L & 0x08);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -1012,7 +1012,7 @@ int executeCB() {
                 flags.Z = !(value & 0x08);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 12;
             }
             else if (endblock == 0x07){
@@ -1020,7 +1020,7 @@ int executeCB() {
                 flags.Z = !(A & 0x08);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -1030,7 +1030,7 @@ int executeCB() {
                 flags.Z = !(B & 0x10);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
@@ -1038,7 +1038,7 @@ int executeCB() {
                 flags.Z = !(C & 0x10);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
@@ -1046,7 +1046,7 @@ int executeCB() {
                 flags.Z = !(D & 0x10);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
@@ -1054,7 +1054,7 @@ int executeCB() {
                 flags.Z = !(E & 0x10);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
@@ -1062,7 +1062,7 @@ int executeCB() {
                 flags.Z = !(H & 0x10);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
@@ -1070,7 +1070,7 @@ int executeCB() {
                 flags.Z = !(L & 0x10);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -1079,7 +1079,7 @@ int executeCB() {
                 flags.Z = !(value & 0x10);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 12;
             }
             else if (endblock == 0x07){
@@ -1087,7 +1087,7 @@ int executeCB() {
                 flags.Z = !(A & 0x10);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -1097,7 +1097,7 @@ int executeCB() {
                 flags.Z = !(B & 0x20);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
@@ -1105,7 +1105,7 @@ int executeCB() {
                 flags.Z = !(C & 0x20);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
@@ -1113,7 +1113,7 @@ int executeCB() {
                 flags.Z = !(D & 0x20);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
@@ -1121,7 +1121,7 @@ int executeCB() {
                 flags.Z = !(E & 0x20);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
@@ -1129,7 +1129,7 @@ int executeCB() {
                 flags.Z = !(H & 0x20);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
@@ -1137,7 +1137,7 @@ int executeCB() {
                 flags.Z = !(L & 0x20);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -1146,7 +1146,7 @@ int executeCB() {
                 flags.Z = !(value & 0x20);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 12;
             }
             else if (endblock == 0x07){
@@ -1154,7 +1154,7 @@ int executeCB() {
                 flags.Z = !(A & 0x20);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -1164,7 +1164,7 @@ int executeCB() {
                 flags.Z = !(B & 0x40);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
@@ -1172,7 +1172,7 @@ int executeCB() {
                 flags.Z = !(C & 0x40);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
@@ -1180,7 +1180,7 @@ int executeCB() {
                 flags.Z = !(D & 0x40);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
@@ -1188,7 +1188,7 @@ int executeCB() {
                 flags.Z = !(E & 0x40);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
@@ -1196,7 +1196,7 @@ int executeCB() {
                 flags.Z = !(H & 0x40);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
@@ -1204,7 +1204,7 @@ int executeCB() {
                 flags.Z = !(L & 0x40);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -1213,7 +1213,7 @@ int executeCB() {
                 flags.Z = !(value & 0x40);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 12;
             }
             else if (endblock == 0x07){
@@ -1221,7 +1221,7 @@ int executeCB() {
                 flags.Z = !(A & 0x40);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -1231,7 +1231,7 @@ int executeCB() {
                 flags.Z = !(B & 0x80);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
@@ -1239,7 +1239,7 @@ int executeCB() {
                 flags.Z = !(C & 0x80);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
@@ -1247,7 +1247,7 @@ int executeCB() {
                 flags.Z = !(D & 0x80);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
@@ -1255,7 +1255,7 @@ int executeCB() {
                 flags.Z = !(E & 0x80);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
@@ -1263,7 +1263,7 @@ int executeCB() {
                 flags.Z = !(H & 0x80);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
@@ -1271,7 +1271,7 @@ int executeCB() {
                 flags.Z = !(L & 0x80);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -1280,7 +1280,7 @@ int executeCB() {
                 flags.Z = !(value & 0x80);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 12;
             }
             else if (endblock == 0x07){
@@ -1288,7 +1288,7 @@ int executeCB() {
                 flags.Z = !(A & 0x80);
                 flags.N = false;
                 flags.H = true;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -1298,37 +1298,37 @@ int executeCB() {
             if (endblock == 0x00){
                 // 0xCB 0x80 RES 0 B | 2 8 | - - - - Reset bit 0 of B
                 B &= ~(1 << 0); // bitwise AND of (11111110) created from 1 << 0 (00000001)
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
                 // 0xCB 0x81 RES 0 C | 2 8 | - - - -
                 C &= 0xFE;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
                 // 0xCB 0x82 RES 0 D | 2 8 | - - - -
                 D &= 0xFE;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
                 // 0xCB 0x83 RES 0 E | 2 8 | - - - -
                 E &= 0xFE;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
                 // 0xCB 0x84 RES 0 H | 2 8 | - - - -
                 H &= 0xFE;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
                 // 0xCB 0x85 RES 0 L | 2 8 | - - - -
                 L &= 0xFE;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -1336,13 +1336,13 @@ int executeCB() {
                 uint8_t value = readByte(getHL());
                 value &= 0xFE;
                 writeByte(getHL(), value);
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
                 // 0xCB 0x87 RES 0 A | 2 8 | - - - -
                 A &= 0xFE;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -1350,37 +1350,37 @@ int executeCB() {
             if (endblock == 0x00){
                 // 0xCB 0x88 RES 1 B | 2 8 | - - - - Reset bit 1 of B
                 B &= ~(1 << 1); // bitwise AND of (11111101)
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
                 // 0xCB 0x89 RES 1 C | 2 8 | - - - -
                 C &= 0xFD;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
                 // 0xCB 0x8A RES 1 D | 2 8 | - - - -
                 D &= 0xFD;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
                 // 0xCB 0x8B RES 1 E | 2 8 | - - - -
                 E &= 0xFD;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
                 // 0xCB 0x8C RES 1 H | 2 8 | - - - -
                 H &= 0xFD;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
                 // 0xCB 0x8D RES 1 L | 2 8 | - - - -
                 L &= 0xFD;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -1388,13 +1388,13 @@ int executeCB() {
                 uint8_t value = readByte(getHL());
                 value &= 0xFD;
                 writeByte(getHL(), value);
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
                 // 0xCB 0x8F RES 1 A | 2 8 | - - - -
                 A &= 0xFD;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -1402,37 +1402,37 @@ int executeCB() {
             if (endblock == 0x00){
                 // 0xCB 0x90 RES 2 B | 2 8 | - - - - 
                 B &= ~(1 << 2); // bitwise AND of (11111011)
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
                 // 0xCB 0x91 RES 2 C | 2 8 | - - - -
                 C &= 0xFB;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
                 // 0xCB 0x92 RES 2 D | 2 8 | - - - -
                 D &= 0xFB;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
                 // 0xCB 0x93 RES 2 E | 2 8 | - - - -
                 E &= 0xFB;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
                 // 0xCB 0x94 RES 2 H | 2 8 | - - - -
                 H &= 0xFB;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
                 // 0xCB 0x95 RES 2 L | 2 8 | - - - -
                 L &= 0xFB;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -1440,13 +1440,13 @@ int executeCB() {
                 uint8_t value = readByte(getHL());
                 value &= 0xFB;
                 writeByte(getHL(), value);
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
                 // 0xCB 0x97 RES 2 A | 2 8 | - - - -
                 A &= 0xFB;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -1454,37 +1454,37 @@ int executeCB() {
             if (endblock == 0x00){
                 // 0xCB 0x98 RES 3 B | 2 8 | - - - - 
                 B &= ~(1 << 3); // bitwise AND of (11110111)
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
                 // 0xCB 0x99 RES 3 C | 2 8 | - - - -
                 C &= 0xF7;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
                 // 0xCB 0x9A RES 3 D | 2 8 | - - - -
                 D &= 0xF7;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
                 // 0xCB 0x9B RES 3 E | 2 8 | - - - -
                 E &= 0xF7;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
                 // 0xCB 0x9C RES 3 H | 2 8 | - - - -
                 H &= 0xF7;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
                 // 0xCB 0x9D RES 3 L | 2 8 | - - - -
                 L &= 0xF7;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -1492,13 +1492,13 @@ int executeCB() {
                 uint8_t value = readByte(getHL());
                 value &= 0xF7;
                 writeByte(getHL(), value);
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
                 // 0xCB 0x9F RES 3 A | 2 8 | - - - -
                 A &= 0xF7;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -1506,37 +1506,37 @@ int executeCB() {
             if (endblock == 0x00){
                 // 0xCB 0xA0 RES 4 B | 2 8 | - - - -
                 B &= ~(1 << 4); // bitwise AND of (11101111)
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
                 // 0xCB 0xA1 RES 4 C | 2 8 | - - - -
                 C &= 0xEF;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
                 // 0xCB 0xA2 RES 4 D | 2 8 | - - - -
                 D &= 0xEF;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
                 // 0xCB 0xA3 RES 4 E | 2 8 | - - - -
                 E &= 0xEF;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
                 // 0xCB 0xA4 RES 4 H | 2 8 | - - - -
                 H &= 0xEF;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
                 // 0xCB 0xA5 RES 4 L | 2 8 | - - - -
                 L &= 0xEF;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -1544,13 +1544,13 @@ int executeCB() {
                 uint8_t value = readByte(getHL());
                 value &= 0xEF;
                 writeByte(getHL(), value);
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
                 // 0xCB 0xA7 RES 4 A | 2 8 | - - - -
                 A &= 0xEF;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -1558,37 +1558,37 @@ int executeCB() {
             if (endblock == 0x00){
                 // 0xCB 0xA8 RES 5 B | 2 8 | - - - -
                 B &= ~(1 << 5); // bitwise AND of (11011111)
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
                 // 0xCB 0xA9 RES 5 C | 2 8 | - - - -
                 C &= 0xDF;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
                 // 0xCB 0xAA RES 5 D | 2 8 | - - - -
                 D &= 0xDF;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
                 // 0xCB 0xAB RES 5 E | 2 8 | - - - -
                 E &= 0xDF;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
                 // 0xCB 0xAC RES 5 H | 2 8 | - - - -
                 H &= 0xDF;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
                 // 0xCB 0xAD RES 5 L | 2 8 | - - - -
                 L &= 0xDF;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -1596,13 +1596,13 @@ int executeCB() {
                 uint8_t value = readByte(getHL());
                 value &= 0xDF;
                 writeByte(getHL(), value);
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
                 // 0xCB 0xAF RES 5 A | 2 8 | - - - -
                 A &= 0xDF;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -1610,37 +1610,37 @@ int executeCB() {
             if (endblock == 0x00){
                 // 0xCB 0xB0 RES 6 B | 2 8 | - - - -
                 B &= ~(1 << 6); // bitwise AND of (10111111)
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
                 // 0xCB 0xB1 RES 6 C | 2 8 | - - - -
                 C &= 0xBF;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
                 // 0xCB 0xB2 RES 6 D | 2 8 | - - - -
                 D &= 0xBF;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
                 // 0xCB 0xB3 RES 6 E | 2 8 | - - - -
                 E &= 0xBF;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
                 // 0xCB 0xB4 RES 6 H | 2 8 | - - - -
                 H &= 0xBF;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
                 // 0xCB 0xB5 RES 6 L | 2 8 | - - - -
                 L &= 0xBF;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -1648,13 +1648,13 @@ int executeCB() {
                 uint8_t value = readByte(getHL());
                 value &= 0xBF;
                 writeByte(getHL(), value);
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
                 // 0xCB 0xB7 RES 6 A | 2 8 | - - - -
                 A &= 0xBF;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -1662,37 +1662,37 @@ int executeCB() {
             if (endblock == 0x00){
                 // 0xCB 0xB8 RES 7 B | 2 8 | - - - -
                 B &= ~(1 << 7); // bitwise AND of (01111111)
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
                 // 0xCB 0xB9 RES 7 C | 2 8 | - - - -
                 C &= 0x7F;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
                 // 0xCB 0xBA RES 7 D | 2 8 | - - - -
                 D &= 0x7F;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
                 // 0xCB 0xBB RES 7 E | 2 8 | - - - -
                 E &= 0x7F;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
                 // 0xCB 0xBC RES 7 H | 2 8 | - - - -
                 H &= 0x7F;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
                 // 0xCB 0xBD RES 7 L | 2 8 | - - - -
                 L &= 0x7F;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -1700,13 +1700,13 @@ int executeCB() {
                 uint8_t value = readByte(getHL());
                 value &= 0x7F;
                 writeByte(getHL(), value);
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
                 // 0xCB 0xBF RES 7 A | 2 8 | - - - -
                 A &= 0x7F;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -1716,37 +1716,37 @@ int executeCB() {
             if (endblock == 0x00){
                 // 0xCB 0xC0 SET 0 B | 2 8 | - - - - 
                 B |= (1 << 0); // bitwise OR of (00000001)
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
                 // 0xCB 0xC1 SET 0 C | 2 8 | - - - -
                 C |= 0x01;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
                 // 0xCB 0xC2 SET 0 D | 2 8 | - - - -
                 D |= 0x01;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
                 // 0xCB 0xC3 SET 0 E | 2 8 | - - - -
                 E |= 0x01;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
                 // 0xCB 0xC4 SET 0 H | 2 8 | - - - -
                 H |= 0x01;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
                 // 0xCB 0xC5 SET 0 L | 2 8 | - - - -
                 L |= 0x01;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -1754,13 +1754,13 @@ int executeCB() {
                 uint8_t value = readByte(getHL());
                 value |= 0x01;
                 writeByte(getHL(), value);
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
                 // 0xCB 0xC7 SET 0 A | 2 8 | - - - -
                 A |= 0x01;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -1768,37 +1768,37 @@ int executeCB() {
             if (endblock == 0x00){
                 // 0xCB 0xC8 SET 1 B | 2 8 | - - - - 
                 B |= (1 << 1); // bitwise OR of (00000010)
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
                 // 0xCB 0xC9 SET 1 C | 2 8 | - - - -
                 C |= 0x02;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
                 // 0xCB 0xCA SET 1 D | 2 8 | - - - -
                 D |= 0x02;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
                 // 0xCB 0xCB SET 1 E | 2 8 | - - - -
                 E |= 0x02;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
                 // 0xCB 0xCC SET 1 H | 2 8 | - - - -
                 H |= 0x02;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
                 // 0xCB 0xCD SET 1 L | 2 8 | - - - -
                 L |= 0x02;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -1806,13 +1806,13 @@ int executeCB() {
                 uint8_t value = readByte(getHL());
                 value |= 0x02;
                 writeByte(getHL(), value);
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
                 // 0xCB 0xCF SET 1 A | 2 8 | - - - -
                 A |= 0x02;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -1820,37 +1820,37 @@ int executeCB() {
             if (endblock == 0x00){
                 // 0xCB 0xD0 SET 2 B | 2 8 | - - - -
                 B |= (1 << 2); // bitwise OR of (00000100)
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
                 // 0xCB 0xD1 SET 2 C | 2 8 | - - - -
                 C |= 0x04;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
                 // 0xCB 0xD2 SET 2 D | 2 8 | - - - -
                 D |= 0x04;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
                 // 0xCB 0xD3 SET 2 E | 2 8 | - - - -
                 E |= 0x04;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
                 // 0xCB 0xD4 SET 2 H | 2 8 | - - - -
                 H |= 0x04;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
                 // 0xCB 0xD5 SET 2 L | 2 8 | - - - -
                 L |= 0x04;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -1858,13 +1858,13 @@ int executeCB() {
                 uint8_t value = readByte(getHL());
                 value |= 0x04;
                 writeByte(getHL(), value);
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
                 // 0xCB 0xD7 SET 2 A | 2 8 | - - - -
                 A |= 0x04;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -1872,37 +1872,37 @@ int executeCB() {
             if (endblock == 0x00){
                 // 0xCB 0xD8 SET 3 B | 2 8 | - - - -
                 B |= (1 << 3); // bitwise OR of (00001000)
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
                 // 0xCB 0xD9 SET 3 C | 2 8 | - - - -
                 C |= 0x08;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
                 // 0xCB 0xDA SET 3 D | 2 8 | - - - -
                 D |= 0x08;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
                 //0xCB 0xDB SET 3 E | 2 8 | - - - -
                 E |= 0x08;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
                 // 0xCB 0xDC SET 3 H | 2 8 | - - - -
                 H |= 0x08;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
                 // 0xCB 0xDD SET 3 L | 2 8 | - - - -
                 L |= 0x08;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -1910,13 +1910,13 @@ int executeCB() {
                 uint8_t value = readByte(getHL());
                 value |= 0x08;
                 writeByte(getHL(), value);
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
                 // 0xCB 0xDF SET 3 A | 2 8 | - - - -
                 A |= 0x08;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -1924,37 +1924,37 @@ int executeCB() {
             if (endblock == 0x00){
                 // 0xCB 0xE0 SET 4 B | 2 8 | - - - -
                 B |= (1 << 4); // bitwise OR of (00010000)
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
                 // 0xCB 0xE1 SET 4 C | 2 8 | - - - -
                 C |= 0x10;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
                 // 0xCB 0xE2 SET 4 D | 2 8 | - - - -
                 D |= 0x10;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
                 // 0xCB 0xE3 SET 4 E | 2 8 | - - - -
                 E |= 0x10;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
                 // 0xCB 0xE4 SET 4 H | 2 8 | - - - -
                 H |= 0x10;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
                 // 0xCB 0xE5 SET 4 L | 2 8 | - - - -
                 L |= 0x10;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -1962,13 +1962,13 @@ int executeCB() {
                 uint8_t value = readByte(getHL());
                 value |= 0x10;
                 writeByte(getHL(), value);
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
                 // 0xCB 0xE7 SET 4 A | 2 8 | - - - -
                 A |= 0x10;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -1976,37 +1976,37 @@ int executeCB() {
             if (endblock == 0x00){
                 // 0xCB 0xE8 SET 5 B | 2 8 | - - - -
                 B |= (1 << 5); // bitwise OR of (00100000)
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
                 // 0xCB 0xE9 SET 5 C | 2 8 | - - - -
                 C |= 0x20;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
                 // 0xCB 0xEA SET 5 D | 2 8 | - - - -
                 D |= 0x20;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
                 // 0xCB 0xEB SET 5 E | 2 8 | - - - -
                 E |= 0x20;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
                 // 0xCB 0xEC SET 5 H | 2 8 | - - - -
                 H |= 0x20;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
                 // 0xCB 0xED SET 5 L | 2 8 | - - - -
                 L |= 0x20;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -2014,13 +2014,13 @@ int executeCB() {
                 uint8_t value = readByte(getHL());
                 value |= 0x20;
                 writeByte(getHL(), value);
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
                 // 0xCB 0xEF SET 5 A | 2 8 | - - - -
                 A |= 0x20;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -2028,37 +2028,37 @@ int executeCB() {
             if (endblock == 0x00){
                 // 0xCB 0xF0 SET 6 B | 2 8 | - - - -
                 B |= (1 << 6); // bitwise OR of (01000000)
-                PC += 2;
+                PC += 1;
                 return 8;       
             }
             else if (endblock == 0x01){
                 // 0xCB 0xF1 SET 6 C | 2 8 | - - - -
                 C |= 0x40;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
                 // 0xCB 0xF2 SET 6 D | 2 8 | - - - -
                 D |= 0x40;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
                 // 0xCB 0xF3 SET 6 E | 2 8 | - - - -
                 E |= 0x40;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
                 // 0xCB 0xF4 SET 6 H | 2 8 | - - - -
                 H |= 0x40;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
                 // 0xCB 0xF5 SET 6 L | 2 8 | - - - -
                 L |= 0x40;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -2066,13 +2066,13 @@ int executeCB() {
                 uint8_t value = readByte(getHL());
                 value |= 0x40;
                 writeByte(getHL(), value);
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
                 // 0xCB 0xF7 SET 6 A | 2 8 | - - - -
                 A |= 0x40;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }
@@ -2080,37 +2080,37 @@ int executeCB() {
             if (endblock == 0x00){
                 // 0xCB 0xF8 SET 7 B | 2 8 | - - - -
                 B |= (1 << 7); // bitwise OR of (10000000)
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x01){
                 // 0xCB 0xF9 SET 7 C | 2 8 | - - - -
                 C |= 0x80;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x02){
                 // 0xCB 0xFA SET 7 D | 2 8 | - - - -
                 D |= 0x80;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x03){
                 // 0xCB 0xFB SET 7 E | 2 8 | - - - -
                 E |= 0x80;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x04){
                 // 0xCB 0xFC SET 7 H | 2 8 | - - - -
                 H |= 0x80;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x05){
                 // 0xCB 0xFD SET 7 L | 2 8 | - - - -
                 L |= 0x80;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
             else if (endblock == 0x06){
@@ -2118,13 +2118,13 @@ int executeCB() {
                 uint8_t value = readByte(getHL());
                 value |= 0x80;
                 writeByte(getHL(), value);
-                PC += 2;
+                PC += 1;
                 return 16;
             }
             else if (endblock == 0x07){
                 // 0xCB 0xFF SET 7 A | 2 8 | - - - -
                 A |= 0x80;
-                PC += 2;
+                PC += 1;
                 return 8;
             }
         }

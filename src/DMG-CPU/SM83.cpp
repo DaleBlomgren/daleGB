@@ -13,7 +13,7 @@
 #include <iostream>
 #include <cstdint>
 
-class SM83
+/*class SM83
 {
     struct flags{
         Z:bool; // Zero Flag
@@ -27,7 +27,7 @@ class SM83
         int movBootRomToMemory();
         void pauseExecution();
         void resumeExecution();
-        void setFlags(uint8_t fbits);
+        //void setFlags(uint8_t fbits);
         void resetFlags();
         void unsetFlags(uint8_t fbits);
         void writeFlagsAF(uint8_t flagbracket);
@@ -52,8 +52,9 @@ class SM83
 //        int referenceTableCB();
 //        int executeCB();
         flags flags;
+        void setFlags();
         uint64_t cycles;
-};
+}*/
 
 SM83::SM83()
 {
@@ -72,6 +73,7 @@ SM83::SM83()
     flags.N = false; // Subtract Flag
     flags.H = false; // Half Carry Flag
     flags.C = false; // Carry Flag
+    IME = 0;
 }
 
 uint16_t SM83::getBC(){
@@ -1265,7 +1267,7 @@ int SM83::executeOpcode(){
             // 0x88 - ADC A,B | 1 4 | Z 0 H C
             uint8_t carry = flags.C ? 1 : 0;
             uint8_t result = A + B + carry;
-            flags.C = (result < A) || (carry && result == A);
+            flags.C = (result < A) || (carry && result == A); //hmm?  Maybe not a carry
             flags.H = ((A & 0x0F) + (B & 0x0F) + carry) > 0x0F;
             A = result;
             flags.Z = (A == 0);
@@ -1467,7 +1469,7 @@ int SM83::executeOpcode(){
             uint8_t carry = flags.C ? 1 : 0;
             uint8_t result = A - C - carry;
             flags.C = (A < (C + carry));
-            flags.H = (A & 0x0F) < ((C & 0x0F) + carry);
+            flags.H = (A & 0x0F) + ((C & 0x0F) + carry) > 0x0F;
             A = result;
             flags.Z = (A == 0);
             flags.N = true;
@@ -1479,7 +1481,7 @@ int SM83::executeOpcode(){
             uint8_t carry = flags.C ? 1 : 0;
             uint8_t result = A - D - carry;
             flags.C = (A < (D + carry));
-            flags.H = (A & 0x0F) < ((D & 0x0F) + carry);
+            flags.H = (A & 0x0F) + ((D & 0x0F) + carry) > 0x0F;
             A = result;
             flags.Z = (A == 0);
             flags.N = true;
@@ -1491,7 +1493,7 @@ int SM83::executeOpcode(){
             uint8_t carry = flags.C ? 1 : 0;
             uint8_t result = A - E - carry;
             flags.C = (A < (E + carry));
-            flags.H = (A & 0x0F) < ((E & 0x0F) + carry);
+            flags.H = (A & 0x0F) + ((E & 0x0F) + carry) > 0x0F;
             A = result;
             flags.Z = (A == 0);
             flags.N = true;
@@ -1503,7 +1505,7 @@ int SM83::executeOpcode(){
             uint8_t carry = flags.C ? 1 : 0;
             uint8_t result = A - H - carry;
             flags.C = (A < (H + carry));
-            flags.H = (A & 0x0F) < ((H & 0x0F) + carry);
+            flags.H = (A & 0x0F) + ((H & 0x0F) + carry) > 0x0F;
             A = result;
             flags.Z = (A == 0);
             flags.N = true;
@@ -1515,7 +1517,7 @@ int SM83::executeOpcode(){
             uint8_t carry = flags.C ? 1 : 0;
             uint8_t result = A - L - carry;
             flags.C = (A < (L + carry));
-            flags.H = (A & 0x0F) < ((L & 0x0F) + carry);
+            flags.H = (A & 0x0F) + ((L & 0x0F) + carry) > 0x0F;
             A = result;
             flags.Z = (A == 0);
             flags.N = true;
@@ -1528,7 +1530,7 @@ int SM83::executeOpcode(){
             uint8_t value = Memory::readByte(getHL());
             uint8_t result = A - value - carry;
             flags.C = (A < (value + carry));
-            flags.H = (A & 0x0F) < ((value & 0x0F) + carry);
+            flags.H = (A & 0x0F) + ((value & 0x0F) + carry) > 0x0F;
             A = result;
             flags.Z = (A == 0);
             flags.N = true;
@@ -2022,76 +2024,249 @@ int SM83::executeOpcode(){
         else if (endblock == 0x03){
             // 0xCB - PREFIX CB | 1 4 | - - - -
             PC += 1;
-            return (executeCB() + 4); // CB prefixed opcodes take an extra 4 cycles
+            return (executeCB()); // CB prefixed opcodes take a total of 2 bytes and 8 cycles total (I think)
         }
         else if (endblock == 0x04){
-            
+            // 0xCC - CALL Z, a16 | 3 24/12 | - - - -
+            if (flags.Z == true) {
+                uint8_t low = Memory::readByte(PC + 1);
+                uint8_t high = Memory::readByte(PC + 2);
+                uint16_t address = (high << 8) | low;
+                SP -= 1;
+                Memory::writeByte(SP, (PC + 3) >> 8); 
+                SP -= 1;
+                Memory::writeByte(SP, (PC + 3) & 0xFF); 
+                PC = address;
+                return 24;
+            }
+            else{
+                PC += 3;
+                return 12;
+            }
         }
         else if (endblock == 0x05){
-            
+            // 0xCD - CALL a16 | 3 24 | - - - -
+            uint8_t low = Memory::readByte(PC + 1);
+            uint8_t high = Memory::readByte(PC + 2);
+            uint16_t address = (high << 8) | low;
+            SP -= 1;
+            Memory::writeByte(SP, (PC + 3) >> 8);
+            SP -= 1;
+            Memory::writeByte(SP, (PC + 3) & 0xFF);
+            PC = address;
+            return 24;
         }
         else if (endblock == 0x06){
-            
+            // 0xCE - ADC A,n8 | 2 8 | Z 0 H C
+            uint8_t value = Memory::readByte(PC + 1);
+            uint8_t carry = flags.C ? 1 : 0;
+            uint16_t result = A + value + carry;
+            flags.Z = ((result & 0xFF) == 0);
+            flags.N = false;
+            flags.H = ((A & 0x0F) + (value & 0x0F) + carry) > 0x0F;
+            flags.C = (result < A) || (carry && result == A);  // I am unsure about the second bit of logic here
+            A = result & 0xFF;
+            PC += 2;
+            return 8;
         }
         else if (endblock == 0x07){
-            
+            // 0xCF - RST $08 | 1 16 | - - - -
+            SP -= 1;
+            Memory::writeByte(SP, (PC + 1) >> 8); //
+            SP -= 1;
+            Memory::writeByte(SP, (PC + 1) & 0xFF); //
+            PC = 0x08;
+            return 16;
         }
     }
     else if (subblock == 0x10){
         if (endblock == 0x00){
-            
+            // 0xD0 - RET NC | 1 20/8 | - - - -
+            if (flags.C == false){
+                uint8_t low = Memory::readByte(SP);
+                SP += 1;
+                uint8_t high = Memory::readByte(SP);
+                SP += 1;
+                PC = (high << 8) | low;
+                return 20;
+            }
+            else{
+                PC += 1;
+                return 8;
+            }
         }
         else if (endblock == 0x01){
-
+            // 0xD1 - POP DE | 1 12 | - - - -
+            uint8_t low = Memory::readByte(SP);
+            SP += 1;
+            uint8_t high = Memory::readByte(SP);
+            SP += 1;
+            D = high;
+            E = low;
+            PC += 1;
+            return 12;
         }
         else if (endblock == 0x02){
-            
+            // 0xD2 - JP NC, a16 | 3 16/12 | - - - -
+            if (flags.C == false){
+                uint8_t low = Memory::readByte(PC + 1);
+                uint8_t high = Memory::readByte(PC + 2);
+                uint16_t address = (high << 8) | low;
+                PC = address;
+                return 16;
+            }
+            else{
+                PC += 3;
+                return 12;
+            }
         }
         else if (endblock == 0x03){
-            
+            // 0xD3 - INVALID | - - | - - - -
+            return -1; // Invalid opcode
         }
         else if (endblock == 0x04){
-            
+            // 0xD4 - CALL NC, a16 | 3 24/12 | - - - -
+            if (flags.C == false){
+                uint8_t low = Memory::readByte(PC + 1);
+                uint8_t high = Memory::readByte(PC + 2);
+                uint16_t address = (high << 8) | low;
+                SP -= 1;
+                Memory::writeByte(SP, (PC + 3) >> 8); 
+                SP -= 1;
+                Memory::writeByte(SP, (PC + 3) & 0xFF); 
+                PC = address;
+                return 24;
+            }
+            else{
+                PC += 3;
+                return 12;
+            }
         }
         else if (endblock == 0x05){
-            
+            // 0xD5 - PUSH DE | 1 16 | - - - -
+            SP -= 1;
+            Memory::writeByte(SP, D); // Push high byte first
+            SP -= 1;
+            Memory::writeByte(SP, E); // Then push low byte
+            PC += 1;
+            return 16;
         }
         else if (endblock == 0x06){
-            
+            // 0xD6 - SUB A,n8 | 2 8 | Z 1 H C
+            uint8_t value = Memory::readByte(PC + 1);
+            uint8_t result = A - value;
+            flags.Z = (result == 0);
+            flags.N = true;
+            flags.H = (A & 0x0F) < (value & 0x0F);
+            flags.C = (A < value);
+            A = result;
+            PC += 2;
+            return 8;
         }
         else if (endblock == 0x07){
-            
+            // 0xD7 - RST $10 | 1 16 | - - - -
+            SP -= 1;
+            Memory::writeByte(SP, (PC + 1) >> 8); 
+            SP -= 1;
+            Memory::writeByte(SP, (PC + 1) & 0xFF);
+            PC = 0x10;
+            return 16;
         }
     }
     else if (subblock == 0x18){
         if (endblock == 0x00){
-            
+            // 0xD8 - RET C | 1 20/8 | - - - -
+            if (flags.C == true){
+                uint8_t low = Memory::readByte(SP);
+                SP += 1;
+                uint8_t high = Memory::readByte(SP);
+                SP += 1;
+                PC = (high << 8) | low;
+                return 20;
+            }
+            else{
+                PC += 1;
+                return 8;
+            }
         }
         else if (endblock == 0x01){
-
+            // 0xD9 - RETI | 1 16 | - - - -
+            // Return from interrupt controller
+            // Also enables interrupts by setting the IME flag to true
+            uint8_t low = Memory::readByte(SP);
+            SP += 1;
+            uint8_t high = Memory::readByte(SP);
+            SP += 1;
+            PC = (high << 8) | low;
+            IMEEnable();
+            return 16;            
         }
         else if (endblock == 0x02){
-            
+            // 0xDA - JP C, a16 | 3 16/12 | - - - -
+            if (flags.C == true){
+                uint8_t low = Memory::readByte(PC + 1);
+                uint8_t high = Memory::readByte(PC + 2);
+                uint16_t address = (high << 8) | low;
+                PC = address;
+                return 16;
+            }
+            else{
+                PC += 3;
+                return 12;
+            }
         }
         else if (endblock == 0x03){
-            
+            // 0xDB - INVALID | - - | - - - -
+            return -1; // Invalid opcode
         }
         else if (endblock == 0x04){
-            
+            // 0xDC - CALL C, a16 | 3 24/12 | - - - -
+            if (flags.C == true){
+                uint8_t low = Memory::readByte(PC + 1);
+                uint8_t high = Memory::readByte(PC + 2);
+                uint16_t address = (high << 8) | low;
+                SP -= 1;
+                Memory::writeByte(SP, (PC + 3) >> 8); 
+                SP -= 1;
+                Memory::writeByte(SP, (PC + 3) & 0xFF); 
+                PC = address;
+                return 24;
+            }
+            else{
+                PC += 3;
+                return 12;
+            }
         }
         else if (endblock == 0x05){
-            
+            // 0xDD - INVALID | - - | - - - -
+            return -1; // Invalid opcode
         }
         else if (endblock == 0x06){
-            
+            // 0xDE - SBC A,n8 | 2 8 | Z 1 H C
+            uint8_t value = Memory::readByte(PC + 1);
+            uint8_t carry = flags.C ? 1 : 0;
+            uint8_t result = A - value - carry;
+            flags.Z = (result == 0);
+            flags.N = true;
+            flags.H = (A & 0x0F) + ((value & 0x0F) + carry) > 0x0F;
+            flags.C = (A < result) || (carry && A == result); // I am unsure about the second bit of logic here
+            A = result;
+            PC += 2;
+            return 8;
         }
         else if (endblock == 0x07){
-            
+            // 0xDF - RST $18 | 1 16 | - - - -
+            SP -= 1;
+            Memory::writeByte(SP, (PC + 1) >> 8); 
+            SP -= 1;
+            Memory::writeByte(SP, (PC + 1) & 0xFF);
+            PC = 0x18;
+            return 16;
         }
     }
     else if (subblock == 0x20){
         if (endblock == 0x00){
-            
+            // 0xE0 - LDH [a8],A | 2 12 | - - - -
         }
         else if (endblock == 0x01){
 
@@ -2248,4 +2423,12 @@ void SM83::setFlags(fbits){
     flags.N = (fbits & 0x40) != 0; // Set N flag
     flags.H = (fbits & 0x20) != 0; // Set H flag
     flags.C = (fbits & 0x10) != 0; // Set C flag
+}
+
+void SM83::IMEEnable(){
+    IME = true;
+}
+
+void SM83::IMEDisable(){
+    IME = false;
 }
