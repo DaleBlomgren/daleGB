@@ -1,9 +1,12 @@
 #include "executeCB.h"
 #include "SM83.h"
 
-namespace CBInstructions {
+//namespace CBInstructions {
+//    int executeCB(SM83& cpu){
+//    }
+//}
 
-int executeCB() {
+int SM83::executeCB(MBC& memoryBank) {
     uint8_t opcode = (PC >> 8) & 0xFF;
     uint8_t block = opcode & 0xC0;
     uint8_t subblock = opcode & 0x38;
@@ -79,10 +82,10 @@ int executeCB() {
             }
             else if (endblock == 0x06){
                 // 0xCB 0x06 RLC [HL] | 2 16 | Z 0 0 C
-                uint8_t value = readByte(getHL());
+                uint8_t value = memoryBank.readByte(getHL());
                 uint8_t result = (value << 1) | (value >> 7);
                 flags.C = (value >> 7) & 0x01;
-                writeByte(getHL(), result);
+                memoryBank.writeByte(getHL(), result);
                 flags.Z = (result == 0);
                 flags.N = false;
                 flags.H = false;
@@ -170,10 +173,10 @@ int executeCB() {
             }
             else if (endblock == 0x06){
                 // 0xCB 0x0E RRC [HL] | 2 16 | Z 0 0 C
-                uint8_t value = readByte(getHL());
+                uint8_t value = memoryBank.readByte(getHL());
                 uint8_t result = (value >> 1) | (value << 7);
                 flags.C = value & 0x01;
-                writeByte(getHL(), result);
+                memoryBank.writeByte(getHL(), result);
                 flags.Z = (result == 0);
                 flags.N = false;
                 flags.H = false;
@@ -267,11 +270,11 @@ int executeCB() {
             }
             else if (endblock == 0x06){
                 // 0xCB 0x16 RL [HL] | 2 16 | Z 0 0 C
-                uint8_t value = readByte(getHL());
+                uint8_t value = memoryBank.readByte(getHL());
                 uint8_t carry = flags.C ? 1 : 0;
                 uint8_t result = (value << 1) | carry;
                 flags.C = (value >> 7) & 0x01; 
-                writeByte(getHL(), result);
+                memoryBank.writeByte(getHL(), result);
                 flags.Z = (result == 0);
                 flags.N = false;
                 flags.H = false;
@@ -366,11 +369,11 @@ int executeCB() {
             }
             else if (endblock == 0x06){
                 // 0xCB 0x1E RR [HL] | 2 16 | Z 0 0 C
-                uint8_t value = readByte(getHL());
+                uint8_t value = memoryBank.readByte(getHL());
                 uint8_t carry = flags.C ? 1 : 0;
                 uint8_t result = (value >> 1) | (carry << 7);
                 flags.C = value & 0x01; 
-                writeByte(getHL(), result);
+                memoryBank.writeByte(getHL(), result);
                 flags.Z = (result == 0);
                 flags.N = false;
                 flags.H = false;
@@ -552,8 +555,8 @@ int executeCB() {
                 // 0xCB 0x2E SRA [HL] | 2 16 | Z 0 0 C
                 uint8_t value = readByte(getHL());
                 uint8_t result = (value >> 1) | (value & 0x80);
-                flags.C = value & 0x01;
-                writeByte(getHL(), result);
+                cpu.flags.C = value & 0x01;
+                cpu.writeByte(getHL(), result);
                 flags.Z = (result == 0);
                 flags.N = false;
                 flags.H = false;
@@ -563,7 +566,7 @@ int executeCB() {
             else if (endblock == 0x07){
                 // 0xCB 0x2F SRA A | 2 8 | Z 0 0 C
                 uint8_t result = (A >> 1) | (A & 0x80);
-                flags.C = A & 0x01;
+                cpu.flags.C = A & 0x01;
                 A = result;
                 flags.Z = (A == 0);
                 flags.N = false;
@@ -1593,9 +1596,9 @@ int executeCB() {
             }
             else if (endblock == 0x06){
                 // 0xCB 0xAE RES 5 [HL] | 2 16 | - - - -
-                uint8_t value = readByte(getHL());
+                uint8_t value = memoryBank.readByte(getHL());
                 value &= 0xDF;
-                writeByte(getHL(), value);
+                memoryBank.writeByte(getHL(), value);
                 PC += 1;
                 return 16;
             }
@@ -1645,9 +1648,9 @@ int executeCB() {
             }
             else if (endblock == 0x06){
                 // 0xCB 0xB6 RES 6 [HL] | 2 16 | - - - -
-                uint8_t value = readByte(getHL());
+                uint8_t value = memoryBank.readByte(getHL());
                 value &= 0xBF;
-                writeByte(getHL(), value);
+                memoryBank.writeByte(getHL(), value);
                 PC += 1;
                 return 16;
             }
@@ -1697,9 +1700,9 @@ int executeCB() {
             }
             else if (endblock == 0x06){
                 // 0xCB 0xBE RES 7 [HL] | 2 16 | - - - -
-                uint8_t value = readByte(getHL());
+                uint8_t value = memoryBank.readByte(getHL());
                 value &= 0x7F;
-                writeByte(getHL(), value);
+                memoryBank.writeByte(getHL(), value);
                 PC += 1;
                 return 16;
             }
@@ -1751,9 +1754,9 @@ int executeCB() {
             }
             else if (endblock == 0x06){
                 // 0xCB 0xC6 SET 0 [HL] | 2 16 | - - - -
-                uint8_t value = readByte(getHL());
+                uint8_t value = memoryBank.readByte(getHL());
                 value |= 0x01;
-                writeByte(getHL(), value);
+                memoryBank.writeByte(getHL(), value);
                 PC += 1;
                 return 16;
             }
@@ -1803,9 +1806,9 @@ int executeCB() {
             }
             else if (endblock == 0x06){
                 // 0xCB 0xCE SET 1 [HL] | 2 16 | - - - -
-                uint8_t value = readByte(getHL());
+                uint8_t value = memoryBank.readByte(getHL());
                 value |= 0x02;
-                writeByte(getHL(), value);
+                memoryBank.writeByte(getHL(), value);
                 PC += 1;
                 return 16;
             }
@@ -1855,9 +1858,9 @@ int executeCB() {
             }
             else if (endblock == 0x06){
                 // 0xCB 0xD6 SET 2 [HL] | 2 16 | - - - -
-                uint8_t value = readByte(getHL());
+                uint8_t value = memoryBank.readByte(getHL());
                 value |= 0x04;
-                writeByte(getHL(), value);
+                memoryBank.writeByte(getHL(), value);
                 PC += 1;
                 return 16;
             }
@@ -1907,9 +1910,9 @@ int executeCB() {
             }
             else if (endblock == 0x06){
                 // 0xCB 0xDE SET 3 [HL] | 2 16 | - - - -
-                uint8_t value = readByte(getHL());
+                uint8_t value = memoryBank.readByte(getHL());
                 value |= 0x08;
-                writeByte(getHL(), value);
+                memoryBank.writeByte(getHL(), value);
                 PC += 1;
                 return 16;
             }
@@ -1959,9 +1962,9 @@ int executeCB() {
             }
             else if (endblock == 0x06){
                 // 0xCB 0xE6 SET 4 [HL] | 2 16 | - - - -
-                uint8_t value = readByte(getHL());
+                uint8_t value = memoryBank.readByte(getHL());
                 value |= 0x10;
-                writeByte(getHL(), value);
+                memoryBank.writeByte(getHL(), value);
                 PC += 1;
                 return 16;
             }
@@ -2011,9 +2014,9 @@ int executeCB() {
             }
             else if (endblock == 0x06){
                 // 0xCB 0xEE SET 5 [HL] | 2 16 | - - - -
-                uint8_t value = readByte(getHL());
+                uint8_t value = memoryBank.readByte(getHL());
                 value |= 0x20;
-                writeByte(getHL(), value);
+                memoryBank.writeByte(getHL(), value);
                 PC += 1;
                 return 16;
             }
@@ -2063,9 +2066,9 @@ int executeCB() {
             }
             else if (endblock == 0x06){
                 // 0xCB 0xF6 SET 6 [HL] | 2 16 | - - - -
-                uint8_t value = readByte(getHL());
+                uint8_t value = memoryBank.readByte(getHL());
                 value |= 0x40;
-                writeByte(getHL(), value);
+                memoryBank.writeByte(getHL(), value);
                 PC += 1;
                 return 16;
             }
@@ -2115,9 +2118,9 @@ int executeCB() {
             }
             else if (endblock == 0x06){
                 // 0xCB 0xFE SET 7 [HL] | 2 16 | - - - -
-                uint8_t value = readByte(getHL());
+                uint8_t value = memoryBank.readByte(getHL());
                 value |= 0x80;
-                writeByte(getHL(), value);
+                memoryBank.writeByte(getHL(), value);
                 PC += 1;
                 return 16;
             }

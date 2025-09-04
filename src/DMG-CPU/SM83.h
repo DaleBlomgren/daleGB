@@ -1,17 +1,19 @@
 #pragma once
 #include <cstdint>
+#include "../Memory/MBC.h"
 
 // Forward declare the class first
 class SM83;
 
+
 // Declare the namespace and its functions
 namespace CBInstructions {
-    int executeCBInstruction(SM83& cpu, uint8_t opcode);
+    int executeCB(SM83& cpu, MBC& memoryBank);
 }
 
 class SM83 {
     // Make the function a friend
-    friend int CBInstructions::executeCBInstruction(SM83& cpu, uint8_t opcode);
+    friend int CBInstructions::executeCB(SM83& cpu, MBC& memoryBank);
     
     struct flags {
         bool Z; // Zero Flag
@@ -20,7 +22,7 @@ class SM83 {
         bool C; // Carry Flag
     };
     public:
-        SM83();
+        SM83(&memoryBank);
         int executeOpcode();
         int movBootRomToMemory();
         void pauseExecution();
@@ -31,7 +33,6 @@ class SM83 {
         void resetFlags();
         void unsetFlags(uint8_t fbits);
         void writeFlagsAF(uint8_t flagbracket);
-        uint8_t convertFlagStruct();
 
     private:
         uint8_t A;         // Accumulator and Flags
@@ -48,11 +49,13 @@ class SM83 {
         uint16_t getDE();
         uint16_t getHL();
         uint16_t getAF();
-        int executeCB();
+        //MBC memoryBank;
+        int executeCB(MBC& memoryBank);
         flags flags;
         bool IME; // Interrupt Master Enable Flag
         bool halted; // CPU Halted State
         bool haltBug; // HALT Bug State
         void setFlags();
+        uint8_t convertFlagStruct();
         uint64_t cycles;
 };

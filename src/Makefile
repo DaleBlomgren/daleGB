@@ -4,6 +4,7 @@ game:
 		./Memory/ROM.cpp \
 		./Memory/MBC.cpp \
 		./DMG-CPU/SM83.cpp \
+		./DMG-CPU/executeCB.cpp \
 		-o daleGB \
 		$(shell pkg-config --cflags --libs sdl2)
 

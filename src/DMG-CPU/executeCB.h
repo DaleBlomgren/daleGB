@@ -5,5 +5,5 @@ class SM83;  // Forward declaration
 
 namespace CBInstructions {
     // Function to execute CB-prefixed instructions
-    int executeCB();
+    int executeCB(MBC& memoryBank);
 }

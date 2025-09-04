@@ -69,7 +69,7 @@ int main(int argc, char** argv){
     // Load ROM into Memory
 
     //Initialize CPU
-    SM83 CPU = SM83();
+    SM83 CPU = SM83(MBC *GBMemory);
     
     //shitty hack redo this now; make way for primary loop and understand the event system
     SDL_Event e; 
