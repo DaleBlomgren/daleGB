@@ -8,7 +8,7 @@
  * Will Emulate 'DMG' version CPU
 ******************************/
 #include "SM83.h"
-#include "../MBC/MBC.h"
+#include "../Memory/MBC.h"
 #include "executeCB.h"
 #include <iostream>
 #include <cstdint>

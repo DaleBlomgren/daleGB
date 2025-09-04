@@ -1,8 +1,19 @@
-class SM83
-{
-    friend namespace CBInstructions;  // Allow CB instructions to access private members
+#pragma once
+#include <cstdint>
+
+// Forward declare the class first
+class SM83;
+
+// Declare the namespace and its functions
+namespace CBInstructions {
+    int executeCBInstruction(SM83& cpu, uint8_t opcode);
+}
+
+class SM83 {
+    // Make the function a friend
+    friend int CBInstructions::executeCBInstruction(SM83& cpu, uint8_t opcode);
     
-    struct flags{
+    struct flags {
         bool Z; // Zero Flag
         bool N; // Subtract Flag
         bool H; // Half Carry Flag
@@ -37,9 +48,7 @@ class SM83
         uint16_t getDE();
         uint16_t getHL();
         uint16_t getAF();
-    //    int referenceTableN();
-    //    int referenceTableCB();
-    //    int executeCB();
+        int executeCB();
         flags flags;
         bool IME; // Interrupt Master Enable Flag
         bool halted; // CPU Halted State

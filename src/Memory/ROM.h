@@ -6,7 +6,7 @@ struct ROMHeader {
     uint8_t CGBFlag;
     std::vector<uint8_t> newLicenseeCode;
     uint8_t SGBFlag;
-    uint8_t cartridgeType;
+    uint8_t MBCCode;
     uint8_t ROMSize;
     uint8_t RAMSize;
     uint8_t destinationCode;

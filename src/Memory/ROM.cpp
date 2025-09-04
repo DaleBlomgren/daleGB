@@ -788,7 +788,7 @@ void ROM::interpretGameHeader(){
 //    }
 //    std::cout << std::endl;
 
-    std::cout << "Cartridge Type: $" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(header.cartridgeType) << std::dec << std::endl;
+    std::cout << "Cartridge Type: $" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(header.MBCCode) << std::dec << std::endl;
     std::cout << "ROM Size: $" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(header.ROMSize) << std::dec << std::endl;
     std::cout << "RAM Size: $" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(header.RAMSize) << std::dec << std::endl;
     std::cout << "Destination Code: $" << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(header.destinationCode) << std::dec << std::endl;
@@ -841,7 +841,7 @@ bool ROM::loadHeader() {
     //std::cout << "SGBFlagBuffer: " << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(SGBFlagBuffer) << std::dec << std::endl;
 
     // MBC Type
-    uint8_t MBCType = fullROM.at(0x0147);
+    uint8_t MBCCode = fullROM.at(0x0147);
 
     //ROM Size Designation
     uint8_t ROMSizeBuffer = fullROM.at(0x0148);
@@ -876,7 +876,7 @@ bool ROM::loadHeader() {
     header.CGBFlag = CGBFlagBuffer;
     header.newLicenseeCode = newLicenseeCodeBuffer;
     header.SGBFlag = SGBFlagBuffer;
-    header.MBCType = MBCType;
+    header.MBCCode = MBCCode;
     header.ROMSize = ROMSizeBuffer;
     header.RAMSize = RAMSizeBuffer;
     header.destinationCode = destinationCodeBuffer;
@@ -890,5 +890,5 @@ bool ROM::loadHeader() {
 }
 
 uint8_t ROM::getMBC() {
-    return header.MBCType;
+    return header.MBCCode;
 }

@@ -65,7 +65,7 @@ void MBC::writeByte(uint16_t address, uint8_t value) {
     }
 }
 
-int setMBCCode(uint8_t code) {
+int MBC::setMBCCode(uint8_t code) {
     switch(code){
         case 0x00: // ROM Only mode
             MBCCode = code;

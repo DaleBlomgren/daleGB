@@ -59,16 +59,17 @@ int main(int argc, char** argv){
     
     // Set MBank mode
     if (GBMemory.setMBCCode(GBGame.getMBC())){
-
+        std::cout << "MBC Set: " << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(GBGame.getMBC()) << std::dec << std::endl;
     }
     else {
-        std::cout << "Game not supported yet, stay tuned!  MBC: " << std::hex << GBGame.getMBC() << std::string << std::endl;
+        std::cout << "Game not supported yet, stay tuned!  MBC: " << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(GBGame.getMBC()) << std::dec  << std::endl;
+        std::cin;
         return 4;
     }
     // Load ROM into Memory
 
     //Initialize CPU
-    //SM83 CPU = SM83();
+    SM83 CPU = SM83();
     
     //shitty hack redo this now; make way for primary loop and understand the event system
     SDL_Event e; 
