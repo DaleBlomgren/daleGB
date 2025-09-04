@@ -8,53 +8,11 @@
  * Will Emulate 'DMG' version CPU
 ******************************/
 #include "SM83.h"
-#include "../Memory/Memory.h"
+#include "../MBC/MBC.h"
 #include "executeCB.h"
 #include <iostream>
 #include <cstdint>
 
-/*class SM83
-{
-    struct flags{
-        Z:bool; // Zero Flag
-        N:bool; // Subtract Flag
-        H:bool; // Half Carry Flag
-        C:bool; // Carry Flag
-    };
-    public:
-        SM83();
-        int executeOpcode();
-        int movBootRomToMemory();
-        void pauseExecution();
-        void resumeExecution();
-        //void setFlags(uint8_t fbits);
-        void resetFlags();
-        void unsetFlags(uint8_t fbits);
-        void writeFlagsAF(uint8_t flagbracket);
-        uint8_t convertFlagStruct();
-
-    private:
-        uint8_t A;         // Accumulator and Flags
-        uint8_t B;
-        uint8_t C;
-        uint8_t D;
-        uint8_t E;         
-        uint8_t F;     
-        uint8_t H;  
-        uint8_t L;  
-        uint16_t SP;        // Stack Pointer
-        uint16_t PC;        // Program Counter
-        uint16_t getBC();        
-        uint16_t getDE();
-        uint16_t getHL();
-        uint16_t getAF();
-//        int referenceTableN();
-//        int referenceTableCB();
-//        int executeCB();
-        flags flags;
-        void setFlags();
-        uint64_t cycles;
-}*/
 
 SM83::SM83()
 {
@@ -69,7 +27,7 @@ SM83::SM83()
     uint16_t SP = 0xFFFE;        // Stack Pointer
     uint16_t PC = 0x0100;        // Program Counter
     uint64_t cycles = 0; 
-    flags.Z = true; // Zero Flag           | These flags may have to line up with a memory address
+    flags.Z = true; // Zero Flag           | These flags may have to line up with a MBC address
     flags.N = false; // Subtract Flag
     flags.H = false; // Half Carry Flag
     flags.C = false; // Carry Flag
@@ -117,15 +75,15 @@ int SM83::executeOpcode(){
 
         else if (endblock == 0x01){
             // 0x01 - LD BC,n16
-            C = Memory::readByte(PC + 1); // Little-endian order
-            B = Memory::readByte(PC + 2);
+            C = MBC::readByte(PC + 1); // Little-endian order
+            B = MBC::readByte(PC + 2);
             PC += 3; 
             return 12; // Returns 12 T-states
         }
 
         else if (endblock == 0x02){
             // 0x02 - LD [BC],A
-            Memory::writeByte(getBC(), A); // Write A to memory at address BC
+            MBC::writeByte(getBC(), A); // Write A to MBC at address BC
             PC += 1; 
             return 8;
         }
@@ -162,7 +120,7 @@ int SM83::executeOpcode(){
 
         else if (endblock == 0x06){
            // 0x06 - LD B,n8 | 2 8 | - - - -
-           B = Memory::readByte(PC + 1); // Load immediate value into B
+           B = MBC::readByte(PC + 1); // Load immediate value into B
            PC += 2;
            return 8; 
         }
@@ -182,11 +140,11 @@ int SM83::executeOpcode(){
     else if (subblock == 0x08){ // 0xXX001XXX block
         if (endblock == 0x00){
             // 0x08 - LD [a16],SP | 3 20 | - - - -
-            uint8_t nn_lsb = Memory::readByte(PC + 1); // Read low byte
-            uint8_t nn_msb = Memory::readByte(PC + 2); // Read high byte
+            uint8_t nn_lsb = MBC::readByte(PC + 1); // Read low byte
+            uint8_t nn_msb = MBC::readByte(PC + 2); // Read high byte
             uint16_t nn = (nn_msb << 8) | nn_lsb;
-            Memory::writeByte(nn, SP & 0xFF); // Write low byte of SP
-            Memory::writeByte(nn + 1, (SP >> 8) & 0xFF); // Write high byte of SP
+            MBC::writeByte(nn, SP & 0xFF); // Write low byte of SP
+            MBC::writeByte(nn + 1, (SP >> 8) & 0xFF); // Write high byte of SP
             PC += 3;
             return 20; 
         }
@@ -206,7 +164,7 @@ int SM83::executeOpcode(){
 
         else if (endblock == 0x02){
             // 0x0A - LD A,[BC] | 1 8 | - - - -
-            A = Memory::readByte(getBC()); 
+            A = MBC::readByte(getBC()); 
             PC += 1;
             return 8;           
         }
@@ -243,7 +201,7 @@ int SM83::executeOpcode(){
 
         else if (endblock == 0x06){
             // 0x0E - LD C,n8 | 2 8 | - - - -
-            C = Memory::readByte(PC + 1); 
+            C = MBC::readByte(PC + 1); 
             PC += 2;
             return 8;
         }
@@ -267,7 +225,7 @@ int SM83::executeOpcode(){
             // https://gist.github.com/SonoSooS/c0055300670d678b5ae8433e20bea595#nop-and-stop
             // This is a special case, the CPU will stop executing instructions
             // until a reset or an interrupt occurs.
-            uint8_t n8 = Memory::readByte(PC + 1); 
+            uint8_t n8 = MBC::readByte(PC + 1); 
             if (n8 == 0x00) {
                 // Stop the CPU
                 // This is a no-operation instruction that stops the CPU until an interrupt occurs.
@@ -282,15 +240,15 @@ int SM83::executeOpcode(){
 
         else if (endblock == 0x01){
             // 0x11 - LD DE,n16 | 3 12 | - - - -
-            E = Memory::readByte(PC + 1);
-            D = Memory::readByte(PC + 2); 
+            E = MBC::readByte(PC + 1);
+            D = MBC::readByte(PC + 2); 
             PC += 3;
             return 12;
         }
 
         else if (endblock == 0x02){
             // 0x12 - LD [DE],A | 1 8 | - - - -
-            Memory::writeByte(getDE(), A); 
+            MBC::writeByte(getDE(), A); 
             PC += 1;
             return 8;
         }
@@ -327,7 +285,7 @@ int SM83::executeOpcode(){
 
         else if (endblock == 0x06){
             // 0x16 - LD D,n8 | 2 8 | - - - -
-            D = Memory::readByte(PC + 1);
+            D = MBC::readByte(PC + 1);
             PC += 2;
             return 8;
         }
@@ -347,7 +305,7 @@ int SM83::executeOpcode(){
     else if (subblock == 0x18){ // 0xXX011XXX block
         if (endblock == 0x00){
             // 0x18 - JR e8 | 2 12 | - - - -
-            int8_t offset = Memory::readByte(PC + 1); // Read signed byte
+            int8_t offset = MBC::readByte(PC + 1); // Read signed byte
             PC += 2; // Increment PC by 2 to skip the offset byte
             PC += offset; // Add the signed offset to PC
             return 12; 
@@ -368,7 +326,7 @@ int SM83::executeOpcode(){
 
         else if (endblock == 0x02) {
             // 0x1A - LD A,[DE] | 1 8 | - - - -
-            A = Memory::readByte(getDE());
+            A = MBC::readByte(getDE());
             PC += 1;
             return 8;
         }
@@ -405,7 +363,7 @@ int SM83::executeOpcode(){
 
         else if (endblock == 0x06) {
             // 0x1E - LD E,n8 | 2 8 | - - - -
-            E = Memory::readByte(PC + 1); 
+            E = MBC::readByte(PC + 1); 
             PC += 2;
             return 8;
         }
@@ -426,7 +384,7 @@ int SM83::executeOpcode(){
         if (endblock == 0x00){
             // 0x20 - JR NZ, e8 | 2 12 | - - - -
             if (flags.Z == false) {
-                int8_t offset = Memory::readByte(PC + 1); // Read signed byte
+                int8_t offset = MBC::readByte(PC + 1); // Read signed byte
                 PC += 2; // Increment PC by 2 to skip the offset byte
                 PC += offset; // Add the signed offset to PC
                 return 12; 
@@ -438,15 +396,15 @@ int SM83::executeOpcode(){
 
         else if (endblock == 0x01){
             // 0x21 - LD HL, n16 | 3 12 | - - - -
-            L = Memory::readByte(PC + 1); 
-            H = Memory::readByte(PC + 2); 
+            L = MBC::readByte(PC + 1); 
+            H = MBC::readByte(PC + 2); 
             PC += 3; 
             return 12; 
         }
 
         else if (endblock == 0x02){
             // 0x22 - LD [HL+], A | 1 8 | - - - -
-            Memory::writeByte(getHL(), A); // !! May be wrong,we want to load data from A register to 16-bit absolute address specified by HL
+            MBC::writeByte(getHL(), A); // !! May be wrong,we want to load data from A register to 16-bit absolute address specified by HL
             uint16_t hl = getHL();
             hl++;
             H = (hl >> 8) & 0xFF;
@@ -487,7 +445,7 @@ int SM83::executeOpcode(){
 
         else if (endblock == 0x06){
             // 0x26 - LD H, n8 | 2 8 | - - - -
-            H = Memory::readByte(PC + 1); 
+            H = MBC::readByte(PC + 1); 
             PC += 2;
             return 8;
         }
@@ -532,7 +490,7 @@ int SM83::executeOpcode(){
         if (endblock == 0x00){ 
             // 0x28 - JR Z, e8 | 2 12/8 | ---- 
             if (flag.Z == true) { 
-                int8_t offset = Memory::readByte(PC + 1); // Read signed byte
+                int8_t offset = MBC::readByte(PC + 1); // Read signed byte
                 PC += 2; // Increment PC by 2 to skip the offset byte
                 PC += offset; // Add the signed offset to PC
                 return 12; // Return 12 T-states for JR Z
@@ -555,7 +513,7 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x02){
             // 0x2A - LD A,[HL+] | 1 8 | - - - -
-            A = Memory::readByte(getHL()); // Load data from memory at address HL into A
+            A = MBC::readByte(getHL()); // Load data from MBC at address HL into A
             uint16_t hl = getHL();
             hl++;
             H = (hl >> 8) & 0xFF; // Increment HL after reading
@@ -592,7 +550,7 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x06){
             // 0x2E - LD L,n8 | 2 8 | - - - -
-            L = Memory::readByte(PC + 1); // Load immediate value into L
+            L = MBC::readByte(PC + 1); // Load immediate value into L
             PC += 2;
             return 8; 
         }
@@ -609,7 +567,7 @@ int SM83::executeOpcode(){
         if (endblock == 0x00){
             //0x30 - JR NC, e8 | 2 12/8 | - - - -
             if (flags.C == false) { // Check if C flag is not set
-                int8_t offset = Memory::readByte(PC + 1); 
+                int8_t offset = MBC::readByte(PC + 1); 
                 PC += 2; 
                 PC += offset; 
                 return 12; 
@@ -621,14 +579,14 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x01){
             // 0x31 - LD SP, n16 | 3 12 | - - - -
-            uint16_t nn = Memory::readByte(PC + 1) | (Memory::readByte(PC + 2) << 8); // Read n16
+            uint16_t nn = MBC::readByte(PC + 1) | (MBC::readByte(PC + 2) << 8); // Read n16
             SP = nn; 
             PC += 3; 
             return 12;
         }
         else if (endblock == 0x02){
             // 0x32 [HL-], A | 1 8 | - - - -
-            Memory::writeByte(getHL(), A); // Write A to memory at address HL
+            MBC::writeByte(getHL(), A); // Write A to MBC at address HL
             uint16_t hl = getHL();
             hl--; 
             H = (hl >> 8) & 0xFF; 
@@ -645,32 +603,32 @@ int SM83::executeOpcode(){
         else if (endblock == 0x04){
             // 0x34 - INC [HL] | 1 12 | Z 0 H -
             uint16_t hl = getHL();
-            uint8_t value = Memory::readByte(hl); // Read value at address HL
+            uint8_t value = MBC::readByte(hl); // Read value at address HL
             value++; // Increment value
             flags.Z = (value == 0); 
             flags.N = false; 
             flags.H = (value & 0x0F) == 0;
-            Memory::writeByte(hl, value); 
+            MBC::writeByte(hl, value); 
             PC += 1;
             return 12; 
         }
         else if (endblock == 0x05){
             // 0x35 - DEC [HL] | 1 12 | Z 1 H -
             uint16_t hl = getHL();
-            uint8_t value = Memory::readByte(hl); 
+            uint8_t value = MBC::readByte(hl); 
             value--; 
             flags.Z = (value == 0);
             flags.N = true;
             flags.H = (value & 0x0F) == 0x0F;
-            Memory::writeByte(hl, value); 
+            MBC::writeByte(hl, value); 
             PC += 1;
             return 12;
         }
         else if (endblock == 0x06){
             // 0x36 - LD [HL], n8 | 2 12 | - - - -
             uint16_t hl = getHL();
-            uint8_t n8 = Memory::readByte(PC + 1);
-            Memory::writeByte(hl, n8); 
+            uint8_t n8 = MBC::readByte(PC + 1);
+            MBC::writeByte(hl, n8); 
             PC += 2; 
             return 12;
         }
@@ -687,7 +645,7 @@ int SM83::executeOpcode(){
         if (endblock == 0x00){
             // 0x38 JR C,e8 | 2 12/8 | - - - -
             if (flags.C == true) {
-                int8_t offset = Memory::readByte(PC + 1); 
+                int8_t offset = MBC::readByte(PC + 1); 
                 PC += 2; 
                 PC += offset; 
                 return 12;
@@ -711,7 +669,7 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x02){
             // 0x3A - LD A,[HL-] | 1 8 | - - - -
-            A = Memory::readByte(getHL());
+            A = MBC::readByte(getHL());
             uint16_t hl = getHL();
             hl--; 
             H = (hl >> 8) & 0xFF; 
@@ -745,7 +703,7 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x06){
             // 0x3E - LD A,n8 | 2 8 | - - - -
-            A = Memory::readByte(PC + 1); // Load immediate value into A
+            A = MBC::readByte(PC + 1); // Load immediate value into A
             PC += 2;
             return 8;
         }
@@ -800,7 +758,7 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x06) {
             // 0x46 - LD B,[HL] | 1 8 | - - - -
-            B = Memory::readByte(getHL());
+            B = MBC::readByte(getHL());
             PC += 1;
             return 8;
         }
@@ -850,7 +808,7 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x06){
             // 0x4E - LD C,[HL] | 1 8 | - - - -
-            C = Memory::readByte(getHL()); 
+            C = MBC::readByte(getHL()); 
             PC += 1;
             return 8;
         }
@@ -900,7 +858,7 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x06){
             // 0x56 - LD D,[HL] | 1 8 | - - - -
-            D = Memory::readByte(getHL()); 
+            D = MBC::readByte(getHL()); 
             PC += 1;
             return 8;
         }
@@ -951,7 +909,7 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x06){
             // 0x5E - LD E,[HL] | 1 8 | - - - -
-            E = Memory::readByte(getHL());
+            E = MBC::readByte(getHL());
             PC += 1;
             return 8;
         }
@@ -1003,7 +961,7 @@ int SM83::executeOpcode(){
         else if (endblock == 0x06){
             // 0x66 - LD H,[HL] | 1 8 | - - - -
             uint16_t hl = getHL();
-            H = Memory::readByte(hl); 
+            H = MBC::readByte(hl); 
             PC += 1;
             return 8;
         }
@@ -1054,7 +1012,7 @@ int SM83::executeOpcode(){
         else if (endblock == 0x06){
             // 0x6E - LD L,[HL] | 1 8 | - - - -
             uint16_t hl = getHL();
-            L = Memory::readByte(hl); 
+            L = MBC::readByte(hl); 
             PC += 1;
             return 8;            
         }
@@ -1068,37 +1026,37 @@ int SM83::executeOpcode(){
     else if (subblock == 0x30){
         if (endblock == 0x00){
             // 0x70 - LD [HL],B | 1 8 | - - - -
-            Memory::writeByte(getHL(), B); // Write B to memory at address HL
+            MBC::writeByte(getHL(), B); // Write B to MBC at address HL
             PC += 1;
             return 8;
         }
         else if (endblock == 0x01){
             // 0x71 - LD [HL],C | 1 8 | - - - -
-            Memory::writeByte(getHL(), C); // Write C to memory at address HL
+            MBC::writeByte(getHL(), C); // Write C to MBC at address HL
             PC += 1;
             return 8;
         }
         else if (endblock == 0x02){
             // 0x72 - LD [HL],D | 1 8 | - - - -
-            Memory::writeByte(getHL(), D); 
+            MBC::writeByte(getHL(), D); 
             PC += 1;
             return 8;
         }
         else if (endblock == 0x03){
             // 0x73 - LD [HL],E | 1 8 | - - - -
-            Memory::writeByte(getHL(), E); 
+            MBC::writeByte(getHL(), E); 
             PC += 1;
             return 8;
         }
         else if (endblock == 0x04){
             // 0x74 - LD [HL],H | 1 8 | - - - -
-            Memory::writeByte(getHL(), H);
+            MBC::writeByte(getHL(), H);
             PC += 1;
             return 8;
         }
         else if (endblock == 0x05){
             // 0x75 - LD [HL],L | 1 8 | - - - -
-            Memory::writeByte(getHL(), L);
+            MBC::writeByte(getHL(), L);
             PC += 1;
             return 8;
         }
@@ -1116,7 +1074,7 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x07){
             // 0x77 - LD [HL],A | 1 8 | - - - -
-            Memory::writeByte(getHL(), A); // Write A to memory at address HL
+            MBC::writeByte(getHL(), A); // Write A to MBC at address HL
             PC += 1;
             return 8;
         }
@@ -1160,7 +1118,7 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x06){
             // 0x7E - LD A,[HL] | 1 8 | - - - -
-            A = Memory::readByte(getHL()); 
+            A = MBC::readByte(getHL()); 
             PC += 1;
             return 8;
         }
@@ -1243,7 +1201,7 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x06){
             // 0x86 - ADD A,[HL] | 1 8 | Z 0 H C
-            uint8_t value = Memory::readByte(getHL());
+            uint8_t value = MBC::readByte(getHL());
             uint8_t result = A + value;
             flags.C = (result < A);
             flags.H = ((A & 0x0F) + (value & 0x0F)) > 0x0F;
@@ -1341,7 +1299,7 @@ int SM83::executeOpcode(){
         else if (endblock == 0x06){
             // 0x8E - ADC A,[HL] | 1 8 | Z 0 H C
             uint8_t carry = flags.C ? 1 : 0;
-            uint8_t value = Memory::readByte(getHL());
+            uint8_t value = MBC::readByte(getHL());
             uint8_t result = A + value + carry;
             flags.C = (result < A) || (carry && result == A);
             flags.H = ((A & 0x0F) + (value & 0x0F) + carry) > 0x0F;
@@ -1433,7 +1391,7 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x06){
             // 0x96 - SUB A,[HL] | 1 8 | Z 1 H C
-            uint8_t value = Memory::readByte(getHL());
+            uint8_t value = MBC::readByte(getHL());
             uint8_t result = A - value;
             flags.C = (A < value);
             flags.H = (A & 0x0F) < (value & 0x0F);
@@ -1530,7 +1488,7 @@ int SM83::executeOpcode(){
         else if (endblock == 0x06){
             // 0x9E - SBC A,[HL] | 1 8 | Z 1 H C
             uint8_t carry = flags.C ? 1 : 0;
-            uint8_t value = Memory::readByte(getHL());
+            uint8_t value = MBC::readByte(getHL());
             uint8_t result = A - value - carry;
             flags.C = (A < (value + carry));
             flags.H = (A & 0x0F) + ((value & 0x0F) + carry) > 0x0F;
@@ -1615,7 +1573,7 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x06){
             // 0xA6 - AND A,[HL] | 1 8 | Z 0 1 0
-            uint8_t value = Memory::readByte(getHL());
+            uint8_t value = MBC::readByte(getHL());
             A = A & value;
             flags.Z = (A == 0);
             flags.N = false;
@@ -1698,7 +1656,7 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x06){
             // 0xAE - XOR A,[HL] | 1 8 | Z 0 0 0
-            uint8_t value = Memory::readByte(getHL());
+            uint8_t value = MBC::readByte(getHL());
             A = A ^ value;
             flags.Z = (A == 0);
             flags.N = false;
@@ -1781,7 +1739,7 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x06){
             // 0xB6 - OR A,[HL] | 1 8 | Z 0 0 0
-            uint8_t value = Memory::readByte(getHL());
+            uint8_t value = MBC::readByte(getHL());
             A = A | value;
             flags.Z = (A == 0);
             flags.N = false;
@@ -1864,7 +1822,7 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x06){
             // 0xBE - CP A,[HL] | 1 8 | Z 1 H C
-            uint8_t value = Memory::readByte(getHL());
+            uint8_t value = MBC::readByte(getHL());
             uint8_t result = A - value;
             flags.C = (A < value);
             flags.H = (A & 0x0F) < (value & 0x0F); 
@@ -1891,9 +1849,9 @@ int SM83::executeOpcode(){
         if (endblock == 0x00){
             // 0xC0 - RET NZ | 1 20/8 | - - - -
             if (flags.Z == false){
-                uint8_t low = Memory::readByte(SP);
+                uint8_t low = MBC::readByte(SP);
                 SP += 1;
-                uint8_t high = Memory::readByte(SP);
+                uint8_t high = MBC::readByte(SP);
                 SP += 1;
                 PC = (high << 8) | low;
                 return 20;
@@ -1905,9 +1863,9 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x01){
             // 0xC1 - POP BC | 1 12 | - - - -
-            uint8_t low = Memory::readByte(SP);
+            uint8_t low = MBC::readByte(SP);
             SP += 1;
-            uint8_t high = Memory::readByte(SP);
+            uint8_t high = MBC::readByte(SP);
             SP += 1;
             B = high;
             C = low;
@@ -1917,8 +1875,8 @@ int SM83::executeOpcode(){
         else if (endblock == 0x02){
             // 0xC2 - JP NZ, a16 | 3 16/12 | - - - -
             if (flags.Z == false){
-                uint8_t low = Memory::readByte(PC + 1);
-                uint8_t high = Memory::readByte(PC + 2);
+                uint8_t low = MBC::readByte(PC + 1);
+                uint8_t high = MBC::readByte(PC + 2);
                 uint16_t address = (high << 8) | low;
                 PC = address;
                 return 16;
@@ -1930,8 +1888,8 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x03){
             // 0xC3 - JP a16 | 3 16 | - - - -
-            uint8_t low = Memory::readByte(PC + 1);
-            uint8_t high = Memory::readByte(PC + 2);
+            uint8_t low = MBC::readByte(PC + 1);
+            uint8_t high = MBC::readByte(PC + 2);
             uint16_t address = (high << 8) | low;
             PC = address;
             return 16;            
@@ -1939,13 +1897,13 @@ int SM83::executeOpcode(){
         else if (endblock == 0x04){
             // 0xC4 - CALL NZ, a16 | 3 24/12 | - - - -
             if (flags.Z == false){
-                uint8_t low = Memory::readByte(PC + 1);
-                uint8_t high = Memory::readByte(PC + 2);
+                uint8_t low = MBC::readByte(PC + 1);
+                uint8_t high = MBC::readByte(PC + 2);
                 uint16_t address = (high << 8) | low;
                 SP -= 1;
-                Memory::writeByte(SP, PC + 3 >> 8); //PC is 16 bit, so push high byte first
+                MBC::writeByte(SP, PC + 3 >> 8); //PC is 16 bit, so push high byte first
                 SP -= 1;
-                Memory::writeByte(SP, PC + 3 & 0xFF); //then push low byte, push return address onto stack
+                MBC::writeByte(SP, PC + 3 & 0xFF); //then push low byte, push return address onto stack
                 PC = address;
                 return 24;
             }
@@ -1957,9 +1915,9 @@ int SM83::executeOpcode(){
         else if (endblock == 0x05){
             // 0xC5 - PUSH BC | 1 16 | - - - -
             SP -= 1;
-            Memory::writeByte(SP, B); // Push high byte first
+            MBC::writeByte(SP, B); // Push high byte first
             SP -= 1;
-            Memory::writeByte(SP, C); // Then push low byte
+            MBC::writeByte(SP, C); // Then push low byte
             PC += 1;
             return 16;            
         }
@@ -1978,9 +1936,9 @@ int SM83::executeOpcode(){
             // 0xC7 - RST $00 | 1 16 | - - - -
             uint8_t n = 0x00;
             SP -= 1;
-            Memory::writeByte(SP, (PC + 1) >> 8); // Push high byte first, not the same address as PC as it would loop
+            MBC::writeByte(SP, (PC + 1) >> 8); // Push high byte first, not the same address as PC as it would loop
             SP -= 1;
-            Memory::writeByte(SP, (PC + 1) & 0xFF); // Then push low byte
+            MBC::writeByte(SP, (PC + 1) & 0xFF); // Then push low byte
             PC = n;
             return 16;
         }   
@@ -1989,9 +1947,9 @@ int SM83::executeOpcode(){
         if (endblock == 0x00){
             // 0xC8 - RET Z | 1 20/8 | - - - -
             if (flags.Z == true){ //return from subroutine if Z flag is set
-                uint8_t low = Memory::readByte(SP);
+                uint8_t low = MBC::readByte(SP);
                 SP += 1;
-                uint8_t high = Memory::readByte(SP);
+                uint8_t high = MBC::readByte(SP);
                 SP += 1;
                 PC = (high << 8) | low;
                 return 20;                
@@ -2003,9 +1961,9 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x01){
             // 0xC9 - RET | 1 16 | - - - -
-            uint8_t low = Memory::readByte(SP);
+            uint8_t low = MBC::readByte(SP);
             SP += 1;
-            uint8_t high = Memory::readByte(SP);
+            uint8_t high = MBC::readByte(SP);
             SP += 1;
             PC = (high << 8) | low;
             return 16;
@@ -2013,8 +1971,8 @@ int SM83::executeOpcode(){
         else if (endblock == 0x02){
             // 0xCA - JP Z, a16 | 3 16/12 | - - - -
             if (flags.Z == true){
-                uint8_t low = Memory::readByte(PC + 1);
-                uint8_t high = Memory::readByte(PC + 2);
+                uint8_t low = MBC::readByte(PC + 1);
+                uint8_t high = MBC::readByte(PC + 2);
                 uint16_t address = (high << 8) | low;
                 PC = address;
                 return 16;
@@ -2032,13 +1990,13 @@ int SM83::executeOpcode(){
         else if (endblock == 0x04){
             // 0xCC - CALL Z, a16 | 3 24/12 | - - - -
             if (flags.Z == true) {
-                uint8_t low = Memory::readByte(PC + 1);
-                uint8_t high = Memory::readByte(PC + 2);
+                uint8_t low = MBC::readByte(PC + 1);
+                uint8_t high = MBC::readByte(PC + 2);
                 uint16_t address = (high << 8) | low;
                 SP -= 1;
-                Memory::writeByte(SP, (PC + 3) >> 8); 
+                MBC::writeByte(SP, (PC + 3) >> 8); 
                 SP -= 1;
-                Memory::writeByte(SP, (PC + 3) & 0xFF); 
+                MBC::writeByte(SP, (PC + 3) & 0xFF); 
                 PC = address;
                 return 24;
             }
@@ -2049,19 +2007,19 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x05){
             // 0xCD - CALL a16 | 3 24 | - - - -
-            uint8_t low = Memory::readByte(PC + 1);
-            uint8_t high = Memory::readByte(PC + 2);
+            uint8_t low = MBC::readByte(PC + 1);
+            uint8_t high = MBC::readByte(PC + 2);
             uint16_t address = (high << 8) | low;
             SP -= 1;
-            Memory::writeByte(SP, (PC + 3) >> 8);
+            MBC::writeByte(SP, (PC + 3) >> 8);
             SP -= 1;
-            Memory::writeByte(SP, (PC + 3) & 0xFF);
+            MBC::writeByte(SP, (PC + 3) & 0xFF);
             PC = address;
             return 24;
         }
         else if (endblock == 0x06){
             // 0xCE - ADC A,n8 | 2 8 | Z 0 H C
-            uint8_t value = Memory::readByte(PC + 1);
+            uint8_t value = MBC::readByte(PC + 1);
             uint8_t carry = flags.C ? 1 : 0;
             uint16_t result = A + value + carry;
             flags.Z = ((result & 0xFF) == 0);
@@ -2075,9 +2033,9 @@ int SM83::executeOpcode(){
         else if (endblock == 0x07){
             // 0xCF - RST $08 | 1 16 | - - - -
             SP -= 1;
-            Memory::writeByte(SP, (PC + 1) >> 8); //
+            MBC::writeByte(SP, (PC + 1) >> 8); //
             SP -= 1;
-            Memory::writeByte(SP, (PC + 1) & 0xFF); //
+            MBC::writeByte(SP, (PC + 1) & 0xFF); //
             PC = 0x08;
             return 16;
         }
@@ -2086,9 +2044,9 @@ int SM83::executeOpcode(){
         if (endblock == 0x00){
             // 0xD0 - RET NC | 1 20/8 | - - - -
             if (flags.C == false){
-                uint8_t low = Memory::readByte(SP);
+                uint8_t low = MBC::readByte(SP);
                 SP += 1;
-                uint8_t high = Memory::readByte(SP);
+                uint8_t high = MBC::readByte(SP);
                 SP += 1;
                 PC = (high << 8) | low;
                 return 20;
@@ -2100,9 +2058,9 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x01){
             // 0xD1 - POP DE | 1 12 | - - - -
-            uint8_t low = Memory::readByte(SP);
+            uint8_t low = MBC::readByte(SP);
             SP += 1;
-            uint8_t high = Memory::readByte(SP);
+            uint8_t high = MBC::readByte(SP);
             SP += 1;
             D = high;
             E = low;
@@ -2112,8 +2070,8 @@ int SM83::executeOpcode(){
         else if (endblock == 0x02){
             // 0xD2 - JP NC, a16 | 3 16/12 | - - - -
             if (flags.C == false){
-                uint8_t low = Memory::readByte(PC + 1);
-                uint8_t high = Memory::readByte(PC + 2);
+                uint8_t low = MBC::readByte(PC + 1);
+                uint8_t high = MBC::readByte(PC + 2);
                 uint16_t address = (high << 8) | low;
                 PC = address;
                 return 16;
@@ -2130,13 +2088,13 @@ int SM83::executeOpcode(){
         else if (endblock == 0x04){
             // 0xD4 - CALL NC, a16 | 3 24/12 | - - - -
             if (flags.C == false){
-                uint8_t low = Memory::readByte(PC + 1);
-                uint8_t high = Memory::readByte(PC + 2);
+                uint8_t low = MBC::readByte(PC + 1);
+                uint8_t high = MBC::readByte(PC + 2);
                 uint16_t address = (high << 8) | low;
                 SP -= 1;
-                Memory::writeByte(SP, (PC + 3) >> 8); 
+                MBC::writeByte(SP, (PC + 3) >> 8); 
                 SP -= 1;
-                Memory::writeByte(SP, (PC + 3) & 0xFF); 
+                MBC::writeByte(SP, (PC + 3) & 0xFF); 
                 PC = address;
                 return 24;
             }
@@ -2148,15 +2106,15 @@ int SM83::executeOpcode(){
         else if (endblock == 0x05){
             // 0xD5 - PUSH DE | 1 16 | - - - -
             SP -= 1;
-            Memory::writeByte(SP, D); // Push high byte first
+            MBC::writeByte(SP, D); // Push high byte first
             SP -= 1;
-            Memory::writeByte(SP, E); // Then push low byte
+            MBC::writeByte(SP, E); // Then push low byte
             PC += 1;
             return 16;
         }
         else if (endblock == 0x06){
             // 0xD6 - SUB A,n8 | 2 8 | Z 1 H C
-            uint8_t value = Memory::readByte(PC + 1);
+            uint8_t value = MBC::readByte(PC + 1);
             uint8_t result = A - value;
             flags.Z = (result == 0);
             flags.N = true;
@@ -2169,9 +2127,9 @@ int SM83::executeOpcode(){
         else if (endblock == 0x07){
             // 0xD7 - RST $10 | 1 16 | - - - -
             SP -= 1;
-            Memory::writeByte(SP, (PC + 1) >> 8); 
+            MBC::writeByte(SP, (PC + 1) >> 8); 
             SP -= 1;
-            Memory::writeByte(SP, (PC + 1) & 0xFF);
+            MBC::writeByte(SP, (PC + 1) & 0xFF);
             PC = 0x10;
             return 16;
         }
@@ -2180,9 +2138,9 @@ int SM83::executeOpcode(){
         if (endblock == 0x00){
             // 0xD8 - RET C | 1 20/8 | - - - -
             if (flags.C == true){
-                uint8_t low = Memory::readByte(SP);
+                uint8_t low = MBC::readByte(SP);
                 SP += 1;
-                uint8_t high = Memory::readByte(SP);
+                uint8_t high = MBC::readByte(SP);
                 SP += 1;
                 PC = (high << 8) | low;
                 return 20;
@@ -2196,9 +2154,9 @@ int SM83::executeOpcode(){
             // 0xD9 - RETI | 1 16 | - - - -
             // Return from interrupt controller
             // Also enables interrupts by setting the IME flag to true
-            uint8_t low = Memory::readByte(SP);
+            uint8_t low = MBC::readByte(SP);
             SP += 1;
-            uint8_t high = Memory::readByte(SP);
+            uint8_t high = MBC::readByte(SP);
             SP += 1;
             PC = (high << 8) | low;
             IMEEnable();
@@ -2207,8 +2165,8 @@ int SM83::executeOpcode(){
         else if (endblock == 0x02){
             // 0xDA - JP C, a16 | 3 16/12 | - - - -
             if (flags.C == true){
-                uint8_t low = Memory::readByte(PC + 1);
-                uint8_t high = Memory::readByte(PC + 2);
+                uint8_t low = MBC::readByte(PC + 1);
+                uint8_t high = MBC::readByte(PC + 2);
                 uint16_t address = (high << 8) | low;
                 PC = address;
                 return 16;
@@ -2225,13 +2183,13 @@ int SM83::executeOpcode(){
         else if (endblock == 0x04){
             // 0xDC - CALL C, a16 | 3 24/12 | - - - -
             if (flags.C == true){
-                uint8_t low = Memory::readByte(PC + 1);
-                uint8_t high = Memory::readByte(PC + 2);
+                uint8_t low = MBC::readByte(PC + 1);
+                uint8_t high = MBC::readByte(PC + 2);
                 uint16_t address = (high << 8) | low;
                 SP -= 1;
-                Memory::writeByte(SP, (PC + 3) >> 8); 
+                MBC::writeByte(SP, (PC + 3) >> 8); 
                 SP -= 1;
-                Memory::writeByte(SP, (PC + 3) & 0xFF); 
+                MBC::writeByte(SP, (PC + 3) & 0xFF); 
                 PC = address;
                 return 24;
             }
@@ -2246,7 +2204,7 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x06){
             // 0xDE - SBC A,n8 | 2 8 | Z 1 H C
-            uint8_t value = Memory::readByte(PC + 1);
+            uint8_t value = MBC::readByte(PC + 1);
             uint8_t carry = flags.C ? 1 : 0;
             uint8_t result = A - value - carry;
             flags.Z = (result == 0);
@@ -2260,9 +2218,9 @@ int SM83::executeOpcode(){
         else if (endblock == 0x07){
             // 0xDF - RST $18 | 1 16 | - - - -
             SP -= 1;
-            Memory::writeByte(SP, (PC + 1) >> 8); 
+            MBC::writeByte(SP, (PC + 1) >> 8); 
             SP -= 1;
-            Memory::writeByte(SP, (PC + 1) & 0xFF);
+            MBC::writeByte(SP, (PC + 1) & 0xFF);
             PC = 0x18;
             return 16;
         }
@@ -2270,16 +2228,16 @@ int SM83::executeOpcode(){
     else if (subblock == 0x20){
         if (endblock == 0x00){
             // 0xE0 - LDH [a8], A | 2 12 | - - - -
-            uint8_t littlebyte = Memory::readByte(PC + 1);
-            Memory::writeByte(0xFF00 + littlebyte, A);
+            uint8_t littlebyte = MBC::readByte(PC + 1);
+            MBC::writeByte(0xFF00 + littlebyte, A);
             PC += 2;
             return 12;
         }
         else if (endblock == 0x01){
             // 0xE1 - POP HL | 1 12 | - - - -
-            uint8_t low = Memory::readByte(SP);
+            uint8_t low = MBC::readByte(SP);
             SP += 1;
-            uint8_t high = Memory::readByte(SP);
+            uint8_t high = MBC::readByte(SP);
             SP += 1;
             H = high;
             L = low;
@@ -2289,7 +2247,7 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x02){
             // 0xE2 - LDH [C], A | 1 8 | - - - -
-            Memory::writeByte(0xFF00 & C , A);
+            MBC::writeByte(0xFF00 & C , A);
             PC += 1;
             return 8;
         }
@@ -2304,15 +2262,15 @@ int SM83::executeOpcode(){
         else if (endblock == 0x05){
             // 0xE5 - PUSH HL | 1 16 | - - - -
             SP -= 1;
-            Memory::writeByte(SP, H); 
+            MBC::writeByte(SP, H); 
             SP -= 1;
-            Memory::writeByte(SP, L); 
+            MBC::writeByte(SP, L); 
             PC += 1;
             return 16;
         }
         else if (endblock == 0x06){
             // 0xE6 - AND A,n8 | 2 8 | Z 0 1 0
-            uint8_t value = Memory::readByte(PC + 1);
+            uint8_t value = MBC::readByte(PC + 1);
             A = A & value;
             flags.Z = (A == 0);
             flags.N = false;
@@ -2324,9 +2282,9 @@ int SM83::executeOpcode(){
         else if (endblock == 0x07){
             // 0xE7 - RST $20 | 1 16 | - - - -
             SP -= 1;
-            Memory::writeByte(SP, (PC + 1) >> 8); 
+            MBC::writeByte(SP, (PC + 1) >> 8); 
             SP -= 1;
-            Memory::writeByte(SP, (PC + 1) & 0xFF); 
+            MBC::writeByte(SP, (PC + 1) & 0xFF); 
             PC = 0x20;
             return 16;
         }
@@ -2334,7 +2292,7 @@ int SM83::executeOpcode(){
     else if (subblock == 0x28){
         if (endblock == 0x00){
             // 0xE8 - ADD SP, r8 | 2 16 | 0 0 H C
-            int8_t value = static_cast<int8_t>(Memory::readByte(PC + 1)); 
+            int8_t value = static_cast<int8_t>(MBC::readByte(PC + 1)); 
             flags.Z = false;
             flags.N = false;
             flags.H = (SP & 0x0F) + (value & 0x0F) > 0x0F;
@@ -2350,10 +2308,10 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x02){
             // 0xEA - LD [a16], A | 3 16 | - - - -
-            uint8_t low = Memory::readByte(PC + 1);
-            uint8_t high = Memory::readByte(PC + 2);
+            uint8_t low = MBC::readByte(PC + 1);
+            uint8_t high = MBC::readByte(PC + 2);
             uint16_t address = (high << 8) | low;
-            Memory::writeByte(address, A);
+            MBC::writeByte(address, A);
             PC += 3;
             return 16;
         }
@@ -2371,7 +2329,7 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x06){
             // 0xEE - XOR A,n8 | 2 8 | Z 0 0 0
-            uint8_t value = Memory::readByte(PC + 1);
+            uint8_t value = MBC::readByte(PC + 1);
             A = A ^ value;
             flags.Z = (A == 0);
             flags.N = false;
@@ -2383,9 +2341,9 @@ int SM83::executeOpcode(){
         else if (endblock == 0x07){
             // 0xEF - RST $28 | 1 16 | - - - -
             SP -= 1;
-            Memory::writeByte(SP, (PC + 1) >> 8); 
+            MBC::writeByte(SP, (PC + 1) >> 8); 
             SP -= 1;
-            Memory::writeByte(SP, (PC + 1) & 0xFF); 
+            MBC::writeByte(SP, (PC + 1) & 0xFF); 
             PC = 0x28;
             return 16;
         }
@@ -2393,16 +2351,16 @@ int SM83::executeOpcode(){
     else if (subblock == 0x30){
         if (endblock == 0x00){
             // 0xF0 - LDH A, [a8] | 2 12 | - - - -
-            uint8_t littlebyte = Memory::readByte(PC + 1);
-            A = Memory::readByte(0xFF00 + littlebyte);
+            uint8_t littlebyte = MBC::readByte(PC + 1);
+            A = MBC::readByte(0xFF00 + littlebyte);
             PC += 2;
             return 12;
         }
         else if (endblock == 0x01){
             // 0xF1 - POP AF | 1 12 | - - - -
-            uint8_t low = Memory::readByte(SP);
+            uint8_t low = MBC::readByte(SP);
             SP += 1;
-            uint8_t high = Memory::readByte(SP);
+            uint8_t high = MBC::readByte(SP);
             SP += 1;
             A = high;
             F = low & 0xF0; // Lower nibble of F is always 0
@@ -2411,7 +2369,7 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x02){
             // 0xF2 - LDH A, [C] | 1 8 | - - - -
-            A = Memory::readByte(0xFF00 + C);
+            A = MBC::readByte(0xFF00 + C);
             PC += 1;
             return 8;
         }
@@ -2430,15 +2388,15 @@ int SM83::executeOpcode(){
         else if (endblock == 0x05){
             // 0xF5 - PUSH AF | 1 16 | - - - -
             SP -= 1;
-            Memory::writeByte(SP, A); 
+            MBC::writeByte(SP, A); 
             SP -= 1;
-            Memory::writeByte(SP, F & 0xF0); // Lower nibble of F is always 0
+            MBC::writeByte(SP, F & 0xF0); // Lower nibble of F is always 0
             PC += 1;
             return 16;
         }
         else if (endblock == 0x06){
             // 0xF6 - OR A,n8 | 2 8 | Z 0 0 0
-            uint8_t value = Memory::readByte(PC + 1);
+            uint8_t value = MBC::readByte(PC + 1);
             A = A | value;
             flags.Z = (A == 0);
             flags.N = false;
@@ -2450,9 +2408,9 @@ int SM83::executeOpcode(){
         else if (endblock == 0x07){
             // 0xF7 - RST $30 | 1 16 | - - - -
             SP -= 1;
-            Memory::writeByte(SP, (PC + 1) >> 8); 
+            MBC::writeByte(SP, (PC + 1) >> 8); 
             SP -= 1;
-            Memory::writeByte(SP, (PC + 1) & 0xFF); 
+            MBC::writeByte(SP, (PC + 1) & 0xFF); 
             PC = 0x30;
             return 16;
         }
@@ -2460,7 +2418,7 @@ int SM83::executeOpcode(){
     else if (subblock == 0x38){
         if (endblock == 0x00){
             // 0xF8 - LD HL, SP+r8 | 2 12 | 0 0 H C
-            int8_t value = static_cast<int8_t>(Memory::readByte(PC + 1)); 
+            int8_t value = static_cast<int8_t>(MBC::readByte(PC + 1)); 
             uint16_t result = SP + value;
             flags.Z = false;
             flags.N = false;
@@ -2479,10 +2437,10 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x02){
             // 0xFA - LD A, [a16] | 3 16 | - - - -
-            uint8_t low = Memory::readByte(PC + 1);
-            uint8_t high = Memory::readByte(PC + 2);
+            uint8_t low = MBC::readByte(PC + 1);
+            uint8_t high = MBC::readByte(PC + 2);
             uint16_t address = (high << 8) | low;
-            A = Memory::readByte(address);
+            A = MBC::readByte(address);
             PC += 3;
             return 16;
         }
@@ -2502,7 +2460,7 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x06){
             // 0xFE - CP A,n8 | 2 8 | Z 1 H C
-            uint8_t value = Memory::readByte(PC + 1);
+            uint8_t value = MBC::readByte(PC + 1);
             uint8_t result = A - value;
             flags.C = (A < value);
             flags.H = (A & 0x0F) < (value & 0x0F); 
@@ -2514,9 +2472,9 @@ int SM83::executeOpcode(){
         else if (endblock == 0x07){
             // 0xFF - RST $38 | 1 16 | - - - -
             SP -= 1;
-            Memory::writeByte(SP, (PC + 1) >> 8); 
+            MBC::writeByte(SP, (PC + 1) >> 8); 
             SP -= 1;
-            Memory::writeByte(SP, (PC + 1) & 0xFF); 
+            MBC::writeByte(SP, (PC + 1) & 0xFF); 
             PC = 0x38;
             return 16;
         }
@@ -2530,7 +2488,7 @@ int SM83::executeOpcode(){
   return -1;
 }
 
-int SM83::movBootRomToMemory(){
+int SM83::movBootRomToMBC(){
   // code to be executed
   return 0;
 }

@@ -15,7 +15,7 @@
 ********************************************************/
 
 #include <random>
-#include "Memory.h"
+#include "MBC.h"
 
 //Rename to Memory Bank Controller ASAP
 
@@ -37,12 +37,12 @@ private:
 };
 */
 
-Memory::Memory() {
+MBC::MBC() {
     memorybank.resize(65536,0); // Initialize memory with 64KB
     randomizeRAM();
 }
 
-void Memory::randomizeRAM() {
+void MBC::randomizeRAM() {
     std::random_device rd; // Obtain a random number from hardware
     std::mt19937 gen(rd()); // Seed the generator with Mersenne twister algorithm
     std::uniform_int_distribution<> distr(0, 255); // Define the range
@@ -52,14 +52,14 @@ void Memory::randomizeRAM() {
     }
 }
 
-uint8_t Memory::readByte(uint16_t address) const {
+uint8_t MBC::readByte(uint16_t address) const {
     if (address < memorybank.size()) {
         return memorybank[address];
     }
     return 0; // Return 0 if address is out of bounds
 }
 
-void Memory::writeByte(uint16_t address, uint8_t value) {
+void MBC::writeByte(uint16_t address, uint8_t value) {
     if (address < memorybank.size()) {
         memorybank[address] = value;
     }
