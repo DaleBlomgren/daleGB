@@ -850,8 +850,8 @@ bool ROM::loadHeader() {
     uint8_t SGBFlagBuffer = fullROM.at(0x0146);
     //std::cout << "SGBFlagBuffer: " << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(SGBFlagBuffer) << std::dec << std::endl;
 
-    //Cartridge Type
-    uint8_t cartridgeTypeBuffer = fullROM.at(0x0147);
+    // MBC Type
+    uint8_t MBCType = fullROM.at(0x0147);
 
     //ROM Size Designation
     uint8_t ROMSizeBuffer = fullROM.at(0x0148);
@@ -886,7 +886,7 @@ bool ROM::loadHeader() {
     header.CGBFlag = CGBFlagBuffer;
     header.newLicenseeCode = newLicenseeCodeBuffer;
     header.SGBFlag = SGBFlagBuffer;
-    header.cartridgeType = cartridgeTypeBuffer;
+    header.MBCType = MBCType;
     header.ROMSize = ROMSizeBuffer;
     header.RAMSize = RAMSizeBuffer;
     header.destinationCode = destinationCodeBuffer;
@@ -897,4 +897,8 @@ bool ROM::loadHeader() {
 
 
     return true;
+}
+
+uint8_t ROM::getMBC() {
+    return header.MBCType;
 }

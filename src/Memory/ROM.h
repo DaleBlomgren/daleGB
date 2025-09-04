@@ -1,12 +1,6 @@
 #pragma once
 
 struct ROMHeader {
-//    ROMHeader(std::vector<uint8_t> titlebuffer, std::vector<uint8_t> manufacturercodebuffer, std::vector<uint8_t> cgbflagbuffer, std::vector<uint8_t> newlicenseecodebuffer,
-//        std::vector<uint8_t> sgbflagbuffer, std::vector<uint8_t> cartridgetypebuffer, std::vector<uint8_t> romsizebuffer, std::vector<uint8_t> ramsizebuffer,
-//        std::vector<uint8_t> destinationcodebuffer, std::vector<uint8_t> oldlicenseecodebuffer, std::vector<uint8_t> maskromversionnumberbuffer, std::vector<uint8_t> headerchecksumbuffer,
-//        std::vector<uint8_t> globalchecksumbuffer) : title{titlebuffer}, manufacturerCode{manufacturercodebuffer}, CGBFlag{cgbflagbuffer}, newLicenseeCode{newlicenseecodebuffer},
-//        SGBFlag{sgbflagbuffer}, cartridgeType{cartridgetypebuffer}, ROMSize{romsizebuffer}, RAMSize{ramsizebuffer}, destinationCode{destinationcodebuffer},
-//        oldLicenseeCode{oldlicenseecodebuffer}, maskROMVersionNumber{maskromversionnumberbuffer}, headerChecksum{headerchecksumbuffer}, globalChecksum{globalchecksumbuffer} {}
     std::vector<uint8_t> title;
     std::vector<uint8_t> manufacturerCode;
     uint8_t CGBFlag;
@@ -35,4 +29,5 @@ class ROM {
         void printROMBinary();
         bool loadROM(const char* filename);
         bool loadHeader();
+        uint8_t getMBC();
 };

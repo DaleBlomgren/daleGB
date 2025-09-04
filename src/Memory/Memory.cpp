@@ -17,6 +17,8 @@
 #include <random>
 #include "Memory.h"
 
+//Rename to Memory Bank Controller ASAP
+
 
 /*class Memory {
 public:

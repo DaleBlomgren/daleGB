@@ -57,6 +57,11 @@ int main(int argc, char** argv){
     //Initialize Memory
     Memory GBMemory = Memory();
 
+
+    // Set MBank mode
+
+    // Load ROM into Memory
+
     //Initialize CPU
     //SM83 CPU = SM83();
     
