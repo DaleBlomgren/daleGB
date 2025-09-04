@@ -812,11 +812,6 @@ bool ROM::loadHeader() {
         return false;
     }
     std::vector<uint8_t> titleBuffer((fullROM.begin() + startIndex), (fullROM.begin() + endIndex));
-    //std::cout << "titleBuffer: "; 
-    //for (uint8_t byte : titleBuffer){
-    //    std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(byte) << " ";
-    //}
-    //std::cout << std::dec << std::endl;
 
     //Manufacturer Code
     startIndex = 0x013F;

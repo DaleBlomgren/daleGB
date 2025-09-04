@@ -11,7 +11,7 @@
 #include <chrono>
 #include <thread>
 #include "Memory/ROM.h"
-#include "Memory/Memory.h"
+#include "Memory/MBC.h"
 #include "DMG-CPU/SM83.h"
 
 const int SCREEN_WIDTH = 640;
@@ -31,7 +31,7 @@ int main(int argc, char** argv){
     SDL_Surface* screenSurface = NULL;
 	if (SDL_Init(SDL_INIT_VIDEO) != 0){
 		std::cout << "SDL_Init_Video Error: " << std::endl;
-		return 1;
+		return 2;
 	}
 
     window = SDL_CreateWindow("DaleGB",
@@ -43,7 +43,7 @@ int main(int argc, char** argv){
 
     if (window == NULL){
         std::cout << "SDL_Createwindow points to null" << std::endl;
-        return 2;
+        return 3;
     }
 
     screenSurface = SDL_GetWindowSurface(window);
@@ -55,11 +55,16 @@ int main(int argc, char** argv){
     GBGame.interpretGameHeader();
 
     //Initialize Memory
-    Memory GBMemory = Memory();
-
-
+    MBC GBMemory = MBC();
+    
     // Set MBank mode
+    if (GBMemory.setMBCCode(GBGame.getMBC())){
 
+    }
+    else {
+        std::cout << "Game not supported yet, stay tuned!  MBC: " << std::hex << GBGame.getMBC() << std::string << std::endl;
+        return 4;
+    }
     // Load ROM into Memory
 
     //Initialize CPU
