@@ -42,5 +42,8 @@ class SM83
     //    int executeCB();
         flags flags;
         bool IME; // Interrupt Master Enable Flag
+        bool halted; // CPU Halted State
+        bool haltBug; // HALT Bug State
+        void setFlags();
         uint64_t cycles;
 };

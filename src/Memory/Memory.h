@@ -13,8 +13,6 @@ class Memory {
         uint8_t readByte(uint16_t address) const;
         void writeByte(uint16_t address, uint8_t value);
         void randomizeRAM();
-        void IMEEnable(); //enable interrupt master enable flag
-        void IMEDisable(); //disable interrupt master enable flag
         void setIFR(uint8_t value); //set interrupt flag register
     private:
         std::vector<uint8_t> memorybank; // Memory vector to hold the data || std::vector self deletes when it goes out of scope

@@ -74,6 +74,8 @@ SM83::SM83()
     flags.H = false; // Half Carry Flag
     flags.C = false; // Carry Flag
     IME = 0;
+    halted = false;
+    haltBug = false;
 }
 
 uint16_t SM83::getBC(){
@@ -1102,6 +1104,7 @@ int SM83::executeOpcode(){
         }
         else if (endblock == 0x06){
             // 0x76 - HALT | 1 4 | - - - -
+            // "Halt system clock until an interrupt occurs"
             // The HALT instruction stops the CPU until an interrupt occurs.
             // This is a placeholder for the HALT instruction, which will be handled in the CPU
             // emulation loop.
@@ -2266,106 +2269,256 @@ int SM83::executeOpcode(){
     }
     else if (subblock == 0x20){
         if (endblock == 0x00){
-            // 0xE0 - LDH [a8],A | 2 12 | - - - -
+            // 0xE0 - LDH [a8], A | 2 12 | - - - -
+            uint8_t littlebyte = Memory::readByte(PC + 1);
+            Memory::writeByte(0xFF00 + littlebyte, A);
+            PC += 2;
+            return 12;
         }
         else if (endblock == 0x01){
+            // 0xE1 - POP HL | 1 12 | - - - -
+            uint8_t low = Memory::readByte(SP);
+            SP += 1;
+            uint8_t high = Memory::readByte(SP);
+            SP += 1;
+            H = high;
+            L = low;
+            PC += 1;
+            return 12;
 
         }
         else if (endblock == 0x02){
-            
+            // 0xE2 - LDH [C], A | 1 8 | - - - -
+            Memory::writeByte(0xFF00 & C , A);
+            PC += 1;
+            return 8;
         }
         else if (endblock == 0x03){
-            
+            // 0xE3 - Invalid Instruction
+            return -1;
         }
         else if (endblock == 0x04){
-            
+            // 0xE4 -Invalid Instruction
+            return -1
         }
         else if (endblock == 0x05){
-            
+            // 0xE5 - PUSH HL | 1 16 | - - - -
+            SP -= 1;
+            Memory::writeByte(SP, H); 
+            SP -= 1;
+            Memory::writeByte(SP, L); 
+            PC += 1;
+            return 16;
         }
         else if (endblock == 0x06){
-            
+            // 0xE6 - AND A,n8 | 2 8 | Z 0 1 0
+            uint8_t value = Memory::readByte(PC + 1);
+            A = A & value;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = true;
+            flags.C = false;
+            PC += 2;
+            return 8;
         }
         else if (endblock == 0x07){
-            
+            // 0xE7 - RST $20 | 1 16 | - - - -
+            SP -= 1;
+            Memory::writeByte(SP, (PC + 1) >> 8); 
+            SP -= 1;
+            Memory::writeByte(SP, (PC + 1) & 0xFF); 
+            PC = 0x20;
+            return 16;
         }
     }
     else if (subblock == 0x28){
         if (endblock == 0x00){
-            
+            // 0xE8 - ADD SP, r8 | 2 16 | 0 0 H C
+            int8_t value = static_cast<int8_t>(Memory::readByte(PC + 1)); 
+            flags.Z = false;
+            flags.N = false;
+            flags.H = (SP & 0x0F) + (value & 0x0F) > 0x0F;
+            flags.C = (SP & 0xFF) + (value & 0xFF) > 0xFF;
+            SP += value;
+            PC += 2;
+            return 16;
         }
         else if (endblock == 0x01){
-
+            // 0xE9 - JP HL | 1 4 | - - - -
+            PC = getHL();
+            return 4;
         }
         else if (endblock == 0x02){
-            
+            // 0xEA - LD [a16], A | 3 16 | - - - -
+            uint8_t low = Memory::readByte(PC + 1);
+            uint8_t high = Memory::readByte(PC + 2);
+            uint16_t address = (high << 8) | low;
+            Memory::writeByte(address, A);
+            PC += 3;
+            return 16;
         }
         else if (endblock == 0x03){
-            
+            // 0xEB - Invalid Instruction
+            return -1;
         }
         else if (endblock == 0x04){
-            
+            // 0xEC - Invalid Instruction
+            return -1;
         }
         else if (endblock == 0x05){
-            
+            // 0xED - Invalid Instruction
+            return -1;
         }
         else if (endblock == 0x06){
-            
+            // 0xEE - XOR A,n8 | 2 8 | Z 0 0 0
+            uint8_t value = Memory::readByte(PC + 1);
+            A = A ^ value;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = false;
+            flags.C = false;
+            PC += 2;
+            return 8;
         }
         else if (endblock == 0x07){
-            
+            // 0xEF - RST $28 | 1 16 | - - - -
+            SP -= 1;
+            Memory::writeByte(SP, (PC + 1) >> 8); 
+            SP -= 1;
+            Memory::writeByte(SP, (PC + 1) & 0xFF); 
+            PC = 0x28;
+            return 16;
         }
     }
     else if (subblock == 0x30){
         if (endblock == 0x00){
-            
+            // 0xF0 - LDH A, [a8] | 2 12 | - - - -
+            uint8_t littlebyte = Memory::readByte(PC + 1);
+            A = Memory::readByte(0xFF00 + littlebyte);
+            PC += 2;
+            return 12;
         }
         else if (endblock == 0x01){
-
+            // 0xF1 - POP AF | 1 12 | - - - -
+            uint8_t low = Memory::readByte(SP);
+            SP += 1;
+            uint8_t high = Memory::readByte(SP);
+            SP += 1;
+            A = high;
+            F = low & 0xF0; // Lower nibble of F is always 0
+            PC += 1;
+            return 12;
         }
         else if (endblock == 0x02){
-            
+            // 0xF2 - LDH A, [C] | 1 8 | - - - -
+            A = Memory::readByte(0xFF00 + C);
+            PC += 1;
+            return 8;
         }
         else if (endblock == 0x03){
-            
+            // 0xF3 - DI | 1 4 | - - - -
+            // "interrupt checking is suppressed so fetch_cycle() is not used"
+            // was I supposed to check for interrupts then increase PC?
+            IMEDisable();
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x04){
-            
+            // 0xF4 - Invalid Instruction
+            return -1;
         }
         else if (endblock == 0x05){
-            
+            // 0xF5 - PUSH AF | 1 16 | - - - -
+            SP -= 1;
+            Memory::writeByte(SP, A); 
+            SP -= 1;
+            Memory::writeByte(SP, F & 0xF0); // Lower nibble of F is always 0
+            PC += 1;
+            return 16;
         }
         else if (endblock == 0x06){
-            
+            // 0xF6 - OR A,n8 | 2 8 | Z 0 0 0
+            uint8_t value = Memory::readByte(PC + 1);
+            A = A | value;
+            flags.Z = (A == 0);
+            flags.N = false;
+            flags.H = false;
+            flags.C = false;
+            PC += 2;
+            return 8;
         }
         else if (endblock == 0x07){
-            
+            // 0xF7 - RST $30 | 1 16 | - - - -
+            SP -= 1;
+            Memory::writeByte(SP, (PC + 1) >> 8); 
+            SP -= 1;
+            Memory::writeByte(SP, (PC + 1) & 0xFF); 
+            PC = 0x30;
+            return 16;
         }
     }
     else if (subblock == 0x38){
         if (endblock == 0x00){
-            
+            // 0xF8 - LD HL, SP+r8 | 2 12 | 0 0 H C
+            int8_t value = static_cast<int8_t>(Memory::readByte(PC + 1)); 
+            uint16_t result = SP + value;
+            flags.Z = false;
+            flags.N = false;
+            flags.H = (SP & 0x0F) + (value & 0x0F) > 0x0F;
+            flags.C = (SP & 0xFF) + (value & 0xFF) > 0xFF;
+            H = (result >> 8) & 0xFF;
+            L = result & 0xFF;
+            PC += 2;
+            return 12;
         }
         else if (endblock == 0x01){
-
+            // 0xF9 - LD SP, HL | 1 8 | - - - -
+            SP = getHL();
+            PC += 1;
+            return 8;
         }
         else if (endblock == 0x02){
-            
+            // 0xFA - LD A, [a16] | 3 16 | - - - -
+            uint8_t low = Memory::readByte(PC + 1);
+            uint8_t high = Memory::readByte(PC + 2);
+            uint16_t address = (high << 8) | low;
+            A = Memory::readByte(address);
+            PC += 3;
+            return 16;
         }
         else if (endblock == 0x03){
-            
+            // 0xFB - EI | 1 4 | - - - -
+            IMEEnable();
+            PC += 1;
+            return 4;
         }
         else if (endblock == 0x04){
-            
+            // 0xFC - Invalid Instruction
+            return -1;
         }
         else if (endblock == 0x05){
-            
+            // 0xFD - Invalid Instruction
+            return -1;
         }
         else if (endblock == 0x06){
-            
+            // 0xFE - CP A,n8 | 2 8 | Z 1 H C
+            uint8_t value = Memory::readByte(PC + 1);
+            uint8_t result = A - value;
+            flags.C = (A < value);
+            flags.H = (A & 0x0F) < (value & 0x0F); 
+            flags.Z = (result == 0);
+            flags.N = true;
+            PC += 2;
+            return 8;
         }
         else if (endblock == 0x07){
-            
+            // 0xFF - RST $38 | 1 16 | - - - -
+            SP -= 1;
+            Memory::writeByte(SP, (PC + 1) >> 8); 
+            SP -= 1;
+            Memory::writeByte(SP, (PC + 1) & 0xFF); 
+            PC = 0x38;
+            return 16;
         }
     }
   }
