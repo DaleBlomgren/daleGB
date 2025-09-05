@@ -30,4 +30,6 @@ class ROM {
         bool loadROM(const char* filename);
         bool loadHeader();
         uint8_t getMBC();
+        std::vector<uint8_t> loadROMSegment(uint16_t dataStart, uint16_t dataFinish);
+        uint8_t retROMSize();
 };

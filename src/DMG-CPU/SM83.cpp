@@ -53,7 +53,7 @@ uint16_t SM83::getAF(){
     return (A << 8) | F;
 }
 
-int SM83::executeOpcode(){
+int SM83::executeOpcode(MBC &memoryBank){
   // returns number of T-cycles executed
   uint8_t opcode = (PC >> 8) & 0xFF;
   uint8_t block = opcode & 0xC0;
@@ -66,6 +66,7 @@ int SM83::executeOpcode(){
     Adjust Flags affected
     return appropriate number of "T-states" (cycles)
   */
+
   if (block == 0x00){ // 0x00XXXXXX block
     if (subblock == 0x00){ // 0xXX000XXX block
         if (endblock == 0x00){
@@ -1986,7 +1987,7 @@ int SM83::executeOpcode(){
         else if (endblock == 0x03){
             // 0xCB - PREFIX CB | 1 4 | - - - -
             PC += 1;
-            return CBInstructions::executeCB(&memoryBank); // CB prefixed opcodes take a total of 2 bytes and 8 cycles total (I think)
+            return CBInstructions::executeCB(*this, memoryBank); // CB prefixed opcodes take a total of 2 bytes and 8 cycles total (I think)
         }
         else if (endblock == 0x04){
             // 0xCC - CALL Z, a16 | 3 24/12 | - - - -

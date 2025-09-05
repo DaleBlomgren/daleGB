@@ -73,6 +73,12 @@ int MBC::setMBCCode(uint8_t code) {
         default:
             return 0;
     }
+    return 1;
+}
 
+int MBC::writeROMSegmenttoRAM(std::vector<uint8_t> buffer) {
+    for (uint16_t i = 0x0000; i < static_cast<uint16_t>(buffer.size()); i++){
+        memorybank[i] = buffer[i];
+    }
     return 1;
 }

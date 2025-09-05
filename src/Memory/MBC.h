@@ -15,6 +15,7 @@ class MBC {
         void randomizeRAM();
         void setIFR(uint8_t value); //set interrupt flag register
         int setMBCCode(uint8_t code);
+        int writeROMSegmenttoRAM(std::vector<uint8_t> buffer); //will probably need more variables in the future
     private:
         std::vector<uint8_t> memorybank; // Memory vector to hold the data || std::vector self deletes when it goes out of scope
         uint8_t MBCCode;

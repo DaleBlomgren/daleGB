@@ -6,13 +6,13 @@
 class SM83;
 
 
-// Declare the namespace and its functions
+// Forward declaration for friend function
 namespace CBInstructions {
     int executeCB(SM83& cpu, MBC& memoryBank);
 }
 
 class SM83 {
-    // Make the function a friend
+    // Make the CBInstructions::executeCB function a friend
     friend int CBInstructions::executeCB(SM83& cpu, MBC& memoryBank);
     
     struct flags {
@@ -22,8 +22,8 @@ class SM83 {
         bool C; // Carry Flag
     };
     public:
-        SM83(&memoryBank);
-        int executeOpcode();
+        SM83(MBC &memoryBank);
+        int executeOpcode(MBC &memoryBank);
         int movBootRomToMemory();
         void pauseExecution();
         void resumeExecution();
@@ -50,7 +50,7 @@ class SM83 {
         uint16_t getHL();
         uint16_t getAF();
         //MBC memoryBank;
-        int executeCB(MBC& memoryBank);
+        int executeCB(MBC &memoryBank);
         flags flags;
         bool IME; // Interrupt Master Enable Flag
         bool halted; // CPU Halted State

@@ -892,3 +892,19 @@ bool ROM::loadHeader() {
 uint8_t ROM::getMBC() {
     return header.MBCCode;
 }
+
+std::vector<uint8_t> ROM::loadROMSegment(uint16_t dataStart, uint16_t dataFinish){
+    uint16_t value = dataFinish - dataStart;
+    std::vector<uint8_t> buffer(static_cast<long>(value));
+    uint16_t j = 0x0000; 
+    for (uint16_t i = dataStart; i < dataFinish; i++){
+        buffer[j] = fullROM[i];
+        j++;
+    }
+
+    return buffer;
+}
+
+uint8_t ROM::retROMSize() {
+    return header.ROMSize;
+}

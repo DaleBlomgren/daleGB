@@ -66,10 +66,12 @@ int main(int argc, char** argv){
         std::cin;
         return 4;
     }
-    // Load ROM into Memory
 
+    // Load ROM into Memory
+    GBMemory.writeROMSegmenttoRAM(GBGame.loadROMSegment(0x0000,GBGame.retROMSize())); // MBC Mode 0 for now
+    
     //Initialize CPU
-    SM83 CPU = SM83(MBC *GBMemory);
+    SM83 cpu(GBMemory);
     
     //shitty hack redo this now; make way for primary loop and understand the event system
     SDL_Event e; 
