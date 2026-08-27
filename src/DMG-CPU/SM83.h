@@ -2,9 +2,7 @@
 #include <cstdint>
 #include "../Memory/MBC.h"
 
-// Forward declare the class first
 class SM83;
-
 
 // Forward declaration for friend function
 namespace CBInstructions {
@@ -22,6 +20,7 @@ class SM83 {
         bool C; // Carry Flag
     };
     public:
+        SM83();
         SM83(MBC &memoryBank);
         int executeOpcode(MBC &memoryBank);
         int movBootRomToMemory();

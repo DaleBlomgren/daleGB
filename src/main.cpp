@@ -8,11 +8,10 @@
 
 #include <SDL2/SDL.h>
 #include <iostream>
+#include <iomanip>
 #include <chrono>
 #include <thread>
-#include "Memory/ROM.h"
-#include "Memory/MBC.h"
-#include "DMG-CPU/SM83.h"
+#include "GameBoy.h"
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
@@ -49,38 +48,11 @@ int main(int argc, char** argv){
     screenSurface = SDL_GetWindowSurface(window);
     SDL_FillRect( screenSurface, NULL, SDL_MapRGB( screenSurface->format, 0xFF, 0xFF, 0xFF ) );
     SDL_UpdateWindowSurface( window );
-
-    //Create ROM Object and store .gb file in Object
-    ROM GBGame = ROM(argv[1]);
-    GBGame.interpretGameHeader();
-
-    //Initialize Memory
-    MBC GBMemory = MBC();
     
-    // Set MBank mode
-    if (GBMemory.setMBCCode(GBGame.getMBC())){
-        std::cout << "MBC Set: " << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(GBGame.getMBC()) << std::dec << std::endl;
-    }
-    else {
-        std::cout << "Game not supported yet, stay tuned!  MBC: " << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(GBGame.getMBC()) << std::dec  << std::endl;
-        std::cin;
-        return 4;
-    }
-
-    // Load ROM into Memory
-    GBMemory.writeROMSegmenttoRAM(GBGame.loadROMSegment(0x0000,GBGame.retROMSize())); // MBC Mode 0 for now
-    
-    //Initialize CPU
-    SM83 cpu(GBMemory);
-    
-    //shitty hack redo this now; make way for primary loop and understand the event system
-    SDL_Event e; 
-    bool quit = false; 
-    while( quit == false ){ 
-        while( SDL_PollEvent( &e ) ){ 
-            if( e.type == SDL_QUIT ) quit = true; 
-        }
-    }
+    ROM gameRom(argv[1]);
+    GameBoy GB(gameRom);
+    SDL_Event event; 
+    GB.run(event);
 
     SDL_DestroyWindow( window );
 

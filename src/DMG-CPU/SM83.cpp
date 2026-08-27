@@ -13,7 +13,9 @@
 #include <iostream>
 #include <cstdint>
 
-
+SM83::SM83(){
+    
+}
 SM83::SM83(MBC &memoryBank)
 {
     uint8_t A = 0x01;         // Accumulator and Flags
@@ -1835,7 +1837,7 @@ int SM83::executeOpcode(MBC &memoryBank){
         }
         else if (endblock == 0x07){
             // 0xBF - CP A,A | 1 4 | 1 1 0 0
-            A - A; //no op
+            A = A; //no op
             flags.Z = true;
             flags.N = true;
             flags.H = false;

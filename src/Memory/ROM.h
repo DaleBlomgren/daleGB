@@ -1,5 +1,9 @@
 #pragma once
 
+#include <vector>
+#include <cstdint>
+
+
 struct ROMHeader {
     std::vector<uint8_t> title;
     std::vector<uint8_t> manufacturerCode;
